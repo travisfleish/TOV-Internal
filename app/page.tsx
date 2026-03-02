@@ -26,6 +26,13 @@ type FormState = {
   copy: string;
 };
 
+type WorkspaceMode = "analysis" | "copyEditor";
+type DiffType = "same" | "add" | "del";
+type DiffToken = {
+  type: DiffType;
+  value: string;
+};
+
 const initialForm: FormState = {
   vertical: "Performance",
   regionStyle: "US",
@@ -50,14 +57,61 @@ const formatSubScoreLabel = (label: string) =>
     .replace(/([a-z])([A-Z])/g, "$1 $2")
     .replace(/^./, (char) => char.toUpperCase());
 
+const tokenizeForDiff = (text: string) => text.match(/\s+|[^\s]+/g) ?? [];
+
+const buildRedlineTokens = (original: string, revised: string): DiffToken[] => {
+  const a = tokenizeForDiff(original);
+  const b = tokenizeForDiff(revised);
+  const dp = Array.from({ length: a.length + 1 }, () => Array<number>(b.length + 1).fill(0));
+
+  for (let i = a.length - 1; i >= 0; i -= 1) {
+    for (let j = b.length - 1; j >= 0; j -= 1) {
+      dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+    }
+  }
+
+  const tokens: DiffToken[] = [];
+  let i = 0;
+  let j = 0;
+
+  while (i < a.length && j < b.length) {
+    if (a[i] === b[j]) {
+      tokens.push({ type: "same", value: a[i] });
+      i += 1;
+      j += 1;
+    } else if (dp[i + 1][j] >= dp[i][j + 1]) {
+      tokens.push({ type: "del", value: a[i] });
+      i += 1;
+    } else {
+      tokens.push({ type: "add", value: b[j] });
+      j += 1;
+    }
+  }
+
+  while (i < a.length) {
+    tokens.push({ type: "del", value: a[i] });
+    i += 1;
+  }
+  while (j < b.length) {
+    tokens.push({ type: "add", value: b[j] });
+    j += 1;
+  }
+
+  return tokens;
+};
+
 export default function Page() {
+  const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("analysis");
   const [form, setForm] = useState<FormState>(initialForm);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  const [revisedCopy, setRevisedCopy] = useState("");
-  const [changeLog, setChangeLog] = useState<string[]>([]);
+  const [editorInput, setEditorInput] = useState("");
+  const [editorRevisedCopy, setEditorRevisedCopy] = useState("");
+  const [editorChangeLog, setEditorChangeLog] = useState<string[]>([]);
+  const [editorView, setEditorView] = useState<"clean" | "redline">("clean");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [isRewriting, setIsRewriting] = useState(false);
   const [error, setError] = useState("");
+  const [editorError, setEditorError] = useState("");
+  const [isEditorRewriting, setIsEditorRewriting] = useState(false);
   const [selectedIssueIndex, setSelectedIssueIndex] = useState<number | null>(null);
 
   const copyRef = useRef<HTMLTextAreaElement>(null);
@@ -71,6 +125,11 @@ export default function Page() {
     };
   }, [analysis]);
 
+  const redlineTokens = useMemo(
+    () => buildRedlineTokens(editorInput, editorRevisedCopy),
+    [editorInput, editorRevisedCopy]
+  );
+
   const updateForm = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
@@ -79,8 +138,6 @@ export default function Page() {
     setError("");
     setIsAnalyzing(true);
     setSelectedIssueIndex(null);
-    setRevisedCopy("");
-    setChangeLog([]);
 
     try {
       const response = await fetch("/api/analyze", {
@@ -113,39 +170,91 @@ export default function Page() {
     }
   };
 
-  const handleRewrite = async () => {
-    if (!analysis) return;
-    setError("");
-    setIsRewriting(true);
-    try {
-      const response = await fetch("/api/rewrite", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          originalCopy: form.copy,
-          analysis
-        })
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.error ?? "Rewrite failed.");
-      }
-      setRevisedCopy(data.revisedCopy ?? "");
-      setChangeLog(Array.isArray(data.changeLog) ? data.changeLog : []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Rewrite failed.");
-    } finally {
-      setIsRewriting(false);
-    }
-  };
-
   const handleReset = () => {
     setForm(initialForm);
     setAnalysis(null);
-    setRevisedCopy("");
-    setChangeLog([]);
     setError("");
     setSelectedIssueIndex(null);
+  };
+
+  const handleAnalysisUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      updateForm("copy", text);
+      setError("");
+    } catch {
+      setError("Unable to read the uploaded file.");
+    } finally {
+      event.target.value = "";
+    }
+  };
+
+  const handleEditorUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      setEditorInput(text);
+      setEditorError("");
+    } catch {
+      setEditorError("Unable to read the uploaded file.");
+    } finally {
+      event.target.value = "";
+    }
+  };
+
+  const handleEditorRewrite = async () => {
+    if (!editorInput.trim()) return;
+    setEditorError("");
+    setIsEditorRewriting(true);
+
+    try {
+      const analyzeResponse = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          meta: {
+            vertical: form.vertical,
+            regionStyle: form.regionStyle,
+            contentType: form.contentType,
+            riskTier: form.riskTier
+          },
+          primaryKeyword: form.primaryKeyword,
+          secondaryKeywords: form.secondaryKeywords,
+          audience: form.audience,
+          cta: form.cta,
+          copy: editorInput
+        })
+      });
+
+      const analysisData = await analyzeResponse.json();
+      if (!analyzeResponse.ok) {
+        throw new Error(analysisData?.error ?? "Unable to analyze editor input.");
+      }
+
+      const rewriteResponse = await fetch("/api/rewrite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          originalCopy: editorInput,
+          analysis: analysisData
+        })
+      });
+      const rewriteData = await rewriteResponse.json();
+      if (!rewriteResponse.ok) {
+        throw new Error(rewriteData?.error ?? "Rewrite failed.");
+      }
+
+      setEditorRevisedCopy(rewriteData.revisedCopy ?? "");
+      setEditorChangeLog(Array.isArray(rewriteData.changeLog) ? rewriteData.changeLog : []);
+      setEditorView("clean");
+    } catch (err) {
+      setEditorError(err instanceof Error ? err.message : "Rewrite failed.");
+    } finally {
+      setIsEditorRewriting(false);
+    }
   };
 
   const exportJson = () => {
@@ -170,45 +279,75 @@ export default function Page() {
 
   return (
     <>
-      <section className="section">
+      <section className="pt-0 pb-6 md:pb-8">
         <div className="container fade-in">
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div>
-              <Image
-                src="/brand/genius-logo-full.png"
-                alt="Genius Sports"
-                width={220}
-                height={44}
-                className="h-auto w-[180px] sm:w-[220px] mb-4"
-                priority
-              />
-              <h1 className="mt-0">Voice + Visibility QA</h1>
-              <p className="mb-0 max-w-3xl opacity-90">
-                Analyze marketing copy for brand tone integrity, search performance, and answer-engine readiness.
-              </p>
-            </div>
-            <span
-              className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
-              style={{ background: "var(--color-blue)", color: "var(--color-white)" }}
-            >
-              Beta
-            </span>
+          <div className="flex items-start">
+            <Image
+              src="/brand/genius-logo-full.png"
+              alt="Genius Sports"
+              width={180}
+              height={36}
+              className="h-auto w-[130px] sm:w-[180px]"
+              priority
+            />
+          </div>
+          <div className="mt-7 text-center">
+            <h1 className="mt-0 mb-3 text-[2.45rem] leading-tight md:text-[2.65rem]">Voice + Visibility QA</h1>
+            <p className="mb-0 mx-auto max-w-3xl opacity-90">
+              Analyze marketing copy for brand tone integrity, search performance, and answer-engine readiness.
+            </p>
           </div>
         </div>
       </section>
 
-      <section className="section">
+      <section className="pt-2 md:pt-3 pb-8 md:pb-10">
         <div className="container">
-          {error ? (
-            <div className="card mb-6 border-l-4" style={{ borderLeftColor: "var(--color-orange)" }}>
-              <strong>Something went wrong.</strong>
-              <p className="mb-0">{error}</p>
+          <div className="mb-8 md:mb-10 flex justify-center">
+            <div
+              className="inline-flex items-center overflow-hidden rounded-md border"
+              style={{ borderColor: "var(--color-navy)" }}
+            >
+            <button
+              type="button"
+                className="px-6 py-2.5 text-base font-medium transition-colors"
+                style={
+                  workspaceMode === "analysis"
+                    ? { background: "var(--color-blue)", color: "var(--color-white)" }
+                    : { background: "var(--color-white)", color: "var(--color-navy)" }
+                }
+              onClick={() => setWorkspaceMode("analysis")}
+                aria-pressed={workspaceMode === "analysis"}
+            >
+              Analysis
+            </button>
+            <button
+              type="button"
+                className="border-l px-6 py-2.5 text-base font-medium transition-colors"
+                style={
+                  workspaceMode === "copyEditor"
+                    ? { borderColor: "var(--color-navy)", background: "var(--color-blue)", color: "var(--color-white)" }
+                    : { borderColor: "var(--color-navy)", background: "var(--color-white)", color: "var(--color-navy)" }
+                }
+              onClick={() => setWorkspaceMode("copyEditor")}
+                aria-pressed={workspaceMode === "copyEditor"}
+            >
+              Copy editor
+            </button>
             </div>
-          ) : null}
+          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="card fade-in">
-              <h3 className="mt-0">Inputs</h3>
+          {workspaceMode === "analysis" ? (
+            <>
+              {error ? (
+                <div className="card mb-6 border-l-4" style={{ borderLeftColor: "var(--color-orange)" }}>
+                  <strong>Something went wrong.</strong>
+                  <p className="mb-0">{error}</p>
+                </div>
+              ) : null}
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="card fade-in">
+                  <h3 className="mt-0">Inputs</h3>
 
               <div className="form-group">
                 <label>Vertical</label>
@@ -296,47 +435,49 @@ export default function Page() {
                 <input id="cta" value={form.cta} onChange={(e) => updateForm("cta", e.target.value)} />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="copy">Copy editor</label>
-                <textarea
-                  ref={copyRef}
-                  id="copy"
-                  value={form.copy}
-                  onChange={(e) => updateForm("copy", e.target.value)}
-                  className="min-h-[260px]"
-                  placeholder="Paste marketing copy here..."
-                />
-              </div>
+                  <div className="form-group">
+                    <label htmlFor="analysisUpload">Upload copy file</label>
+                    <input id="analysisUpload" type="file" accept=".txt,.md,.csv,text/plain,text/markdown" onChange={handleAnalysisUpload} />
+                  </div>
 
-              <div className="flex flex-wrap gap-3">
-                <button className="button button-primary" onClick={handleAnalyze} disabled={isAnalyzing || !form.copy.trim()}>
-                  {isAnalyzing ? "Analyzing..." : "Analyze"}
-                </button>
-                <button className="button button-outline" onClick={handleRewrite} disabled={!analysis || isRewriting}>
-                  {isRewriting ? "Rewriting..." : "Rewrite to fix issues"}
-                </button>
-                <button className="button button-secondary" onClick={handleReset}>
-                  Reset
-                </button>
-              </div>
-            </div>
+                  <div className="form-group">
+                    <label htmlFor="copy">Copy</label>
+                    <textarea
+                      ref={copyRef}
+                      id="copy"
+                      value={form.copy}
+                      onChange={(e) => updateForm("copy", e.target.value)}
+                      className="min-h-[260px]"
+                      placeholder="Paste marketing copy here..."
+                    />
+                  </div>
 
-            <div className="card fade-in">
-              <div className="flex items-center justify-between gap-3 flex-wrap">
-                <div className="flex items-center gap-3">
-                  <Image
-                    src="/brand/genius-logo-g.png"
-                    alt="Genius G mark"
-                    width={28}
-                    height={28}
-                    className="h-7 w-7"
-                  />
-                  <h3 className="mt-0 mb-0">Results</h3>
+                  <div className="flex flex-wrap gap-3">
+                    <button className="button button-primary" onClick={handleAnalyze} disabled={isAnalyzing || !form.copy.trim()}>
+                      {isAnalyzing ? "Analyzing..." : "Analyze"}
+                    </button>
+                    <button className="button button-secondary" onClick={handleReset}>
+                      Reset
+                    </button>
+                  </div>
                 </div>
-                <button className="button button-outline" onClick={exportJson} disabled={!analysis}>
-                  Export JSON
-                </button>
-              </div>
+
+                <div className="card fade-in">
+                  <div className="flex items-center justify-between gap-3 flex-wrap">
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src="/brand/genius-logo-g.png"
+                        alt="Genius G mark"
+                        width={28}
+                        height={28}
+                        className="h-7 w-7"
+                      />
+                      <h3 className="mt-0 mb-0">Results</h3>
+                    </div>
+                    <button className="button button-outline" onClick={exportJson} disabled={!analysis}>
+                      Export JSON
+                    </button>
+                  </div>
 
               {!analysis ? (
                 <p className="mt-6 mb-0">Run analysis to see Voice, SEO, and AEO scoring with issue breakdowns.</p>
@@ -473,23 +614,130 @@ export default function Page() {
                     </ul>
                   </div>
 
-                  {revisedCopy ? (
-                    <div className="form-group">
-                      <label htmlFor="revisedCopy">Revised draft</label>
-                      <textarea id="revisedCopy" value={revisedCopy} onChange={(e) => setRevisedCopy(e.target.value)} />
-                      {changeLog.length ? (
-                        <ul className="mt-3">
-                          {changeLog.map((item) => (
-                            <li key={item}>{item}</li>
-                          ))}
-                        </ul>
-                      ) : null}
+                </div>
+              )}
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {editorError ? (
+                <div className="card mb-6 border-l-4" style={{ borderLeftColor: "var(--color-orange)" }}>
+                  <strong>Something went wrong.</strong>
+                  <p className="mb-0">{editorError}</p>
+                </div>
+              ) : null}
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="card fade-in">
+                  <h3 className="mt-0">Copy editor input</h3>
+                  <div className="form-group">
+                    <label htmlFor="editorUpload">Upload copy file</label>
+                    <input id="editorUpload" type="file" accept=".txt,.md,.csv,text/plain,text/markdown" onChange={handleEditorUpload} />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="editorInput">Paste copy</label>
+                    <textarea
+                      id="editorInput"
+                      value={editorInput}
+                      onChange={(e) => setEditorInput(e.target.value)}
+                      className="min-h-[320px]"
+                      placeholder="Paste copy here or upload a file..."
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      className="button button-primary"
+                      onClick={handleEditorRewrite}
+                      disabled={isEditorRewriting || !editorInput.trim()}
+                    >
+                      {isEditorRewriting ? "Rewriting..." : "Rewrite to fix issues"}
+                    </button>
+                    <button
+                      className="button button-secondary"
+                      onClick={() => {
+                        setEditorInput("");
+                        setEditorRevisedCopy("");
+                        setEditorChangeLog([]);
+                        setEditorError("");
+                      }}
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+
+                <div className="card fade-in">
+                  <div className="flex items-center justify-between gap-3 flex-wrap">
+                    <h3 className="mt-0 mb-0">Revised copy</h3>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        className={`button ${editorView === "clean" ? "button-primary" : "button-outline"}`}
+                        onClick={() => setEditorView("clean")}
+                        disabled={!editorRevisedCopy}
+                      >
+                        Normal
+                      </button>
+                      <button
+                        type="button"
+                        className={`button ${editorView === "redline" ? "button-primary" : "button-outline"}`}
+                        onClick={() => setEditorView("redline")}
+                        disabled={!editorRevisedCopy}
+                      >
+                        Redline
+                      </button>
+                    </div>
+                  </div>
+
+                  {!editorRevisedCopy ? (
+                    <p className="mb-0 mt-4">Run rewrite to view revised copy and change highlights.</p>
+                  ) : editorView === "clean" ? (
+                    <div className="form-group mt-4">
+                      <label htmlFor="editorRevisedCopy">Revised draft</label>
+                      <textarea
+                        id="editorRevisedCopy"
+                        value={editorRevisedCopy}
+                        onChange={(e) => setEditorRevisedCopy(e.target.value)}
+                        className="min-h-[320px]"
+                      />
+                    </div>
+                  ) : (
+                    <div className="mt-4 rounded-md border p-4 leading-7 whitespace-pre-wrap">
+                      {redlineTokens.map((token, index) => {
+                        if (token.type === "add") {
+                          return (
+                            <ins key={`add-${index}`} className="bg-green-100 no-underline">
+                              {token.value}
+                            </ins>
+                          );
+                        }
+                        if (token.type === "del") {
+                          return (
+                            <del key={`del-${index}`} className="bg-red-100">
+                              {token.value}
+                            </del>
+                          );
+                        }
+                        return <span key={`same-${index}`}>{token.value}</span>;
+                      })}
+                    </div>
+                  )}
+
+                  {editorChangeLog.length ? (
+                    <div className="mt-4">
+                      <h4 className="mt-0">Change log</h4>
+                      <ul>
+                        {editorChangeLog.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
                     </div>
                   ) : null}
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
+            </>
+          )}
         </div>
       </section>
     </>
