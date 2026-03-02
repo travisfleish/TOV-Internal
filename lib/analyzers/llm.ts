@@ -238,6 +238,7 @@ Rules:
 - Preserve meaning; do not invent facts, metrics, partnerships, certifications, or claims.
 - Remove banned/gimmicky language and any guaranteed outcome language.
 - Add specificity only by reorganizing existing details.
+- Preserve the original's formatting: keep the same line breaks, paragraph breaks (blank lines between paragraphs), headings on their own lines, and list structure. Do not merge content into one block—output the revised copy with newlines in the same places as the original.
 - Add AEO blocks if missing: definition + FAQ placeholders such as [DEFINE TERM], [PROOF NEEDED].
 - ${lengthRule}
 
@@ -296,6 +297,7 @@ Rules:
 - Preserve meaning; do not invent facts, metrics, partnerships, certifications, or claims.
 - Remove banned/gimmicky language and any guaranteed outcome language.
 - Add specificity only by reorganizing existing details.
+- Preserve the original's formatting: keep the same line breaks, paragraph breaks (blank lines between paragraphs), headings on their own lines, and list structure. Do not merge content into one block—output the revised copy with newlines in the same places as the original.
 - Add AEO blocks if missing: definition + FAQ placeholders such as [DEFINE TERM], [PROOF NEEDED].
 - ${lengthRule}
 

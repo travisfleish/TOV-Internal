@@ -16,17 +16,29 @@ function clipLengthAroundOriginal(
 ): { revisedCopy: string; clipped: boolean } {
   if (contentType === "Social") return { revisedCopy: candidate, clipped: false };
   const originalWords = original.trim().split(/\s+/).filter(Boolean);
-  const candidateWords = candidate.trim().split(/\s+/).filter(Boolean);
   const min = Math.floor(originalWords.length * 0.85);
   const max = Math.ceil(originalWords.length * 1.15);
 
+  const candidateWords = candidate.trim().split(/\s+/).filter(Boolean);
   if (candidateWords.length < min) {
     return { revisedCopy: candidate, clipped: false };
   }
-  if (candidateWords.length > max) {
-    return { revisedCopy: candidateWords.slice(0, max).join(" "), clipped: true };
+  if (candidateWords.length <= max) {
+    return { revisedCopy: candidate, clipped: false };
   }
-  return { revisedCopy: candidate, clipped: false };
+
+  // Clip by finding the character index after the max-th word so we preserve line/paragraph breaks
+  const trimmed = candidate.trim();
+  let wordCount = 0;
+  let i = 0;
+  while (i < trimmed.length && wordCount < max) {
+    const match = trimmed.slice(i).match(/^\s*\S+/);
+    if (!match) break;
+    wordCount += 1;
+    i += match[0].length;
+  }
+  const clippedText = trimmed.slice(0, i).trim();
+  return { revisedCopy: clippedText, clipped: true };
 }
 
 function fallbackRewrite(originalCopy: string, vertical: string): { revisedCopy: string; changeLog: string[] } {

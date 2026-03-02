@@ -299,7 +299,8 @@ export function removeBannedPhrases(copy: string, vertical: AnalyzeRequest["meta
     const regex = new RegExp(`\\b${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
     revised = revised.replace(regex, "");
   }
-  return revised.replace(/\s{2,}/g, " ").replace(/[ \t]+\n/g, "\n").trim();
+  // Collapse only spaces/tabs (preserve line and paragraph breaks)
+  return revised.replace(/[ \t]{2,}/g, " ").replace(/[ \t]+\n/g, "\n").replace(/\n[ \t]+/g, "\n").trim();
 }
 
 export function issueSnippet(copy: string, issue: Issue): string | null {
