@@ -85,16 +85,49 @@ export const analyzeRequestSchema = z.object({
 
 export const rewriteRequestSchema = z.object({
   originalCopy: z.string().min(1),
-  analysis: analysisSchema
+  analysis: analysisSchema,
+  stream: z.boolean().optional().default(false)
+});
+
+export const spanSchema = z.object({
+  start: z.number().int().nonnegative(),
+  end: z.number().int().nonnegative()
+});
+
+export const editSchema = z.object({
+  id: z.string().min(1),
+  op: z.enum(["replace", "add", "del"]),
+  beforeText: z.string(),
+  afterText: z.string(),
+  beforeSpan: spanSchema.nullable(),
+  afterSpan: spanSchema.nullable()
+});
+
+export const redlineSegmentSchema = z.object({
+  type: z.enum(["same", "add", "del"]),
+  text: z.string(),
+  editId: z.string().min(1).optional(),
+  beforeSpan: spanSchema.optional(),
+  afterSpan: spanSchema.optional()
+});
+
+export const rewriteMetaSchema = z.object({
+  rewriteSource: z.enum(["llm", "fallback"])
 });
 
 export const rewriteResponseSchema = z.object({
   revisedCopy: z.string(),
-  changeLog: z.array(z.string())
+  edits: z.array(editSchema),
+  segments: z.array(redlineSegmentSchema),
+  changeLog: z.array(z.string()).default([]),
+  meta: rewriteMetaSchema
 });
 
 export type AnalyzeRequest = z.infer<typeof analyzeRequestSchema>;
 export type Analysis = z.infer<typeof analysisSchema>;
 export type Issue = z.infer<typeof issueSchema>;
 export type RewriteRequest = z.infer<typeof rewriteRequestSchema>;
+export type Span = z.infer<typeof spanSchema>;
+export type Edit = z.infer<typeof editSchema>;
+export type RedlineSegment = z.infer<typeof redlineSegmentSchema>;
 export type RewriteResponse = z.infer<typeof rewriteResponseSchema>;

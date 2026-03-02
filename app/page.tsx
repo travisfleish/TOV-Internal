@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 
-import type { Analysis } from "@/lib/schema";
+import type { Analysis, RedlineSegment, Span } from "@/lib/schema";
 
 type FormState = {
   vertical: "Performance" | "Bet" | "Media";
@@ -27,11 +27,6 @@ type FormState = {
 };
 
 type WorkspaceMode = "analysis" | "copyEditor";
-type DiffType = "same" | "add" | "del";
-type DiffToken = {
-  type: DiffType;
-  value: string;
-};
 
 const initialForm: FormState = {
   vertical: "Performance",
@@ -57,47 +52,21 @@ const formatSubScoreLabel = (label: string) =>
     .replace(/([a-z])([A-Z])/g, "$1 $2")
     .replace(/^./, (char) => char.toUpperCase());
 
-const tokenizeForDiff = (text: string) => text.match(/\s+|[^\s]+/g) ?? [];
+const isSpan = (value: unknown): value is Span => {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<Span>;
+  return Number.isInteger(candidate.start) && Number.isInteger(candidate.end);
+};
 
-const buildRedlineTokens = (original: string, revised: string): DiffToken[] => {
-  const a = tokenizeForDiff(original);
-  const b = tokenizeForDiff(revised);
-  const dp = Array.from({ length: a.length + 1 }, () => Array<number>(b.length + 1).fill(0));
-
-  for (let i = a.length - 1; i >= 0; i -= 1) {
-    for (let j = b.length - 1; j >= 0; j -= 1) {
-      dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
-    }
-  }
-
-  const tokens: DiffToken[] = [];
-  let i = 0;
-  let j = 0;
-
-  while (i < a.length && j < b.length) {
-    if (a[i] === b[j]) {
-      tokens.push({ type: "same", value: a[i] });
-      i += 1;
-      j += 1;
-    } else if (dp[i + 1][j] >= dp[i][j + 1]) {
-      tokens.push({ type: "del", value: a[i] });
-      i += 1;
-    } else {
-      tokens.push({ type: "add", value: b[j] });
-      j += 1;
-    }
-  }
-
-  while (i < a.length) {
-    tokens.push({ type: "del", value: a[i] });
-    i += 1;
-  }
-  while (j < b.length) {
-    tokens.push({ type: "add", value: b[j] });
-    j += 1;
-  }
-
-  return tokens;
+const isRedlineSegment = (value: unknown): value is RedlineSegment => {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<RedlineSegment>;
+  if (!["same", "add", "del"].includes(candidate.type ?? "")) return false;
+  if (typeof candidate.text !== "string") return false;
+  if (candidate.editId !== undefined && typeof candidate.editId !== "string") return false;
+  if (candidate.beforeSpan !== undefined && !isSpan(candidate.beforeSpan)) return false;
+  if (candidate.afterSpan !== undefined && !isSpan(candidate.afterSpan)) return false;
+  return true;
 };
 
 export default function Page() {
@@ -107,6 +76,8 @@ export default function Page() {
   const [editorInput, setEditorInput] = useState("");
   const [editorRevisedCopy, setEditorRevisedCopy] = useState("");
   const [editorChangeLog, setEditorChangeLog] = useState<string[]>([]);
+  const [editorSegments, setEditorSegments] = useState<RedlineSegment[]>([]);
+  const [editorRewriteSource, setEditorRewriteSource] = useState<"llm" | "fallback" | null>(null);
   const [editorView, setEditorView] = useState<"clean" | "redline">("clean");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState("");
@@ -115,7 +86,6 @@ export default function Page() {
   const [selectedIssueIndex, setSelectedIssueIndex] = useState<number | null>(null);
 
   const copyRef = useRef<HTMLTextAreaElement>(null);
-
   const groupedIssues = useMemo(() => {
     if (!analysis) return { voice: [], seo: [], aeo: [] } as const;
     return {
@@ -125,9 +95,9 @@ export default function Page() {
     };
   }, [analysis]);
 
-  const redlineTokens = useMemo(
-    () => buildRedlineTokens(editorInput, editorRevisedCopy),
-    [editorInput, editorRevisedCopy]
+  const redlineSegmentsForRender = useMemo<RedlineSegment[]>(
+    () => (editorSegments.length ? editorSegments : [{ type: "same", text: editorRevisedCopy }]),
+    [editorSegments, editorRevisedCopy]
   );
 
   const updateForm = <K extends keyof FormState>(key: K, value: FormState[K]) => {
@@ -239,16 +209,66 @@ export default function Page() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           originalCopy: editorInput,
-          analysis: analysisData
+          analysis: analysisData,
+          stream: true
         })
       });
-      const rewriteData = await rewriteResponse.json();
       if (!rewriteResponse.ok) {
+        const rewriteData = await rewriteResponse.json();
         throw new Error(rewriteData?.error ?? "Rewrite failed.");
       }
 
-      setEditorRevisedCopy(rewriteData.revisedCopy ?? "");
-      setEditorChangeLog(Array.isArray(rewriteData.changeLog) ? rewriteData.changeLog : []);
+      const contentType = rewriteResponse.headers.get("content-type") ?? "";
+      if (contentType.includes("text/event-stream")) {
+        const reader = rewriteResponse.body?.getReader();
+        const decoder = new TextDecoder();
+        if (!reader) throw new Error("No response body.");
+        let buffer = "";
+        let revisedCopy = "";
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n\n");
+          buffer = lines.pop() ?? "";
+          for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.chunk != null) {
+                revisedCopy += data.chunk;
+                setEditorRevisedCopy(revisedCopy);
+              }
+              if (data.done) {
+                setEditorRevisedCopy(data.revisedCopy ?? revisedCopy);
+                setEditorChangeLog(Array.isArray(data.changeLog) ? data.changeLog : []);
+                setEditorSegments(
+                  Array.isArray(data.segments) ? data.segments.filter(isRedlineSegment) : []
+                );
+                setEditorRewriteSource(
+                  data?.meta?.rewriteSource === "llm" || data?.meta?.rewriteSource === "fallback"
+                    ? data.meta.rewriteSource
+                    : null
+                );
+              }
+              if (data.error) throw new Error(data.error);
+            } catch (e) {
+              if (e instanceof SyntaxError) continue;
+              throw e;
+            }
+          }
+        }
+      } else {
+        const rewriteData = await rewriteResponse.json();
+        setEditorRevisedCopy(rewriteData.revisedCopy ?? "");
+        setEditorChangeLog(Array.isArray(rewriteData.changeLog) ? rewriteData.changeLog : []);
+        setEditorSegments(Array.isArray(rewriteData.segments) ? rewriteData.segments.filter(isRedlineSegment) : []);
+        setEditorRewriteSource(
+          rewriteData?.meta?.rewriteSource === "llm" || rewriteData?.meta?.rewriteSource === "fallback"
+            ? rewriteData.meta.rewriteSource
+            : null
+        );
+      }
       setEditorView("clean");
     } catch (err) {
       setEditorError(err instanceof Error ? err.message : "Rewrite failed.");
@@ -659,6 +679,8 @@ export default function Page() {
                         setEditorInput("");
                         setEditorRevisedCopy("");
                         setEditorChangeLog([]);
+                        setEditorSegments([]);
+                        setEditorRewriteSource(null);
                         setEditorError("");
                       }}
                     >
@@ -704,32 +726,36 @@ export default function Page() {
                     </div>
                   ) : (
                     <div className="mt-4 rounded-md border p-4 leading-7 whitespace-pre-wrap">
-                      {redlineTokens.map((token, index) => {
-                        if (token.type === "add") {
-                          return (
-                            <ins key={`add-${index}`} className="bg-green-100 no-underline">
-                              {token.value}
-                            </ins>
-                          );
-                        }
-                        if (token.type === "del") {
-                          return (
-                            <del key={`del-${index}`} className="bg-red-100">
-                              {token.value}
-                            </del>
-                          );
-                        }
-                        return <span key={`same-${index}`}>{token.value}</span>;
-                      })}
+                      {redlineSegmentsForRender.map((segment, index) => {
+                          if (segment.type === "add") {
+                            return (
+                              <ins key={`add-${index}`} className="bg-green-100 no-underline">
+                                {segment.text}
+                              </ins>
+                            );
+                          }
+                          if (segment.type === "del") {
+                            return (
+                              <del key={`del-${index}`} className="bg-red-100">
+                                {segment.text}
+                              </del>
+                            );
+                          }
+                          return <span key={`same-${index}`}>{segment.text}</span>;
+                        })}
                     </div>
                   )}
+
+                  {editorRewriteSource ? (
+                    <p className="mt-3 mb-0 text-sm opacity-75">Rewrite source: {editorRewriteSource}</p>
+                  ) : null}
 
                   {editorChangeLog.length ? (
                     <div className="mt-4">
                       <h4 className="mt-0">Change log</h4>
                       <ul>
-                        {editorChangeLog.map((item) => (
-                          <li key={item}>{item}</li>
+                        {editorChangeLog.map((item, index) => (
+                          <li key={`${item}-${index}`}>{item}</li>
                         ))}
                       </ul>
                     </div>

@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 
-import { rewriteWithLLM } from "@/lib/analyzers/llm";
+import { rewriteWithLLM, rewriteWithLLMStream } from "@/lib/analyzers/llm";
 import { removeBannedPhrases } from "@/lib/analyzers/rules";
-import { rewriteRequestSchema, rewriteResponseSchema } from "@/lib/schema";
+import { computeEdits } from "@/lib/redline/computeEdits";
+import {
+  rewriteRequestSchema,
+  rewriteResponseSchema,
+  type RewriteResponse
+} from "@/lib/schema";
 
 function clipLengthAroundOriginal(
   original: string,
@@ -24,7 +29,7 @@ function clipLengthAroundOriginal(
   return { revisedCopy: candidate, clipped: false };
 }
 
-function fallbackRewrite(originalCopy: string, vertical: string) {
+function fallbackRewrite(originalCopy: string, vertical: string): { revisedCopy: string; changeLog: string[] } {
   let revised = removeBannedPhrases(originalCopy, vertical as "Performance" | "Bet" | "Media");
   const changeLog: string[] = ["Removed banned or high-risk marketing phrases."];
 
@@ -52,15 +57,91 @@ export async function POST(request: Request) {
       );
     }
 
-    const { originalCopy, analysis } = parsed.data;
+    const { originalCopy, analysis, stream: useStream } = parsed.data;
     const contentType = analysis.meta.contentType;
 
-    let result =
-      (await rewriteWithLLM({
+    if (useStream) {
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        async start(controller) {
+          try {
+            let fullRevisedCopy = "";
+            let hadChunks = false;
+            for await (const { chunk } of rewriteWithLLMStream({
+              originalCopy,
+              analysis,
+              contentType
+            })) {
+              hadChunks = true;
+              controller.enqueue(
+                encoder.encode(`data: ${JSON.stringify({ chunk })}\n\n`)
+              );
+              fullRevisedCopy += chunk;
+            }
+            if (!hadChunks || !fullRevisedCopy.trim()) {
+              const fallback = fallbackRewrite(originalCopy, analysis.meta.vertical);
+              fullRevisedCopy = fallback.revisedCopy;
+              const clipped = clipLengthAroundOriginal(originalCopy, fullRevisedCopy, contentType);
+              const revisedCopy = clipped.revisedCopy;
+              const changeLog = clipped.clipped
+                ? [...fallback.changeLog, "Trimmed output length to stay within +/-15%."]
+                : fallback.changeLog;
+              const computed = computeEdits(originalCopy, revisedCopy);
+              controller.enqueue(
+                encoder.encode(
+                  `data: ${JSON.stringify({
+                    done: true,
+                    revisedCopy,
+                    changeLog,
+                    segments: computed.segments,
+                    meta: { rewriteSource: "fallback" as const }
+                  })}\n\n`
+                )
+              );
+            } else {
+              const clipped = clipLengthAroundOriginal(originalCopy, fullRevisedCopy, contentType);
+              const revisedCopy = clipped.revisedCopy;
+              const changeLog = clipped.clipped
+                ? ["Streamed rewrite applied.", "Trimmed output length to stay within +/-15%."]
+                : ["Streamed rewrite applied."];
+              const computed = computeEdits(originalCopy, revisedCopy);
+              controller.enqueue(
+                encoder.encode(
+                  `data: ${JSON.stringify({
+                    done: true,
+                    revisedCopy,
+                    changeLog,
+                    segments: computed.segments,
+                    meta: { rewriteSource: "llm" as const }
+                  })}\n\n`
+                )
+              );
+            }
+          } catch {
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify({ error: "Stream failed." })}\n\n`)
+            );
+          } finally {
+            controller.close();
+          }
+        }
+      });
+      return new Response(stream, {
+        headers: {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive"
+        }
+      });
+    }
+
+    const llmResult = await rewriteWithLLM({
         originalCopy,
         analysis,
         contentType
-      })) ?? fallbackRewrite(originalCopy, analysis.meta.vertical);
+      });
+    let result = llmResult ?? fallbackRewrite(originalCopy, analysis.meta.vertical);
+    let rewriteSource: RewriteResponse["meta"]["rewriteSource"] = llmResult ? "llm" : "fallback";
 
     const clipped = clipLengthAroundOriginal(originalCopy, result.revisedCopy, contentType);
     if (clipped.clipped) {
@@ -70,10 +151,32 @@ export async function POST(request: Request) {
       };
     }
 
-    const validated = rewriteResponseSchema.safeParse(result);
+    const computed = computeEdits(originalCopy, result.revisedCopy);
+
+    const payload: RewriteResponse = {
+      revisedCopy: result.revisedCopy,
+      edits: computed.edits,
+      segments: computed.segments,
+      changeLog: result.changeLog,
+      meta: {
+        rewriteSource
+      }
+    };
+
+    const validated = rewriteResponseSchema.safeParse(payload);
     if (!validated.success) {
       const fallback = fallbackRewrite(originalCopy, analysis.meta.vertical);
-      return NextResponse.json(fallback);
+      const fallbackComputed = computeEdits(originalCopy, fallback.revisedCopy);
+      const fallbackPayload: RewriteResponse = {
+        revisedCopy: fallback.revisedCopy,
+        edits: fallbackComputed.edits,
+        segments: fallbackComputed.segments,
+        changeLog: fallback.changeLog,
+        meta: {
+          rewriteSource: "fallback"
+        }
+      };
+      return NextResponse.json(fallbackPayload);
     }
 
     return NextResponse.json(validated.data);

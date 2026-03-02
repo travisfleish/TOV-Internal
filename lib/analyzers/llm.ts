@@ -7,13 +7,125 @@ import { analysisSchema, type Analysis, type AnalyzeRequest } from "@/lib/schema
 const MODEL = "gpt-4o-mini";
 
 const BRAND_VOICE_DNA = `
-Non-negotiables:
-- Evidence-led authority: proof + specific nouns; avoid unprovable superlatives.
-- Precise and specific: active voice; define acronyms once; reduce ambiguity.
-- Sport-native, not gimmicky: natural sport fluency; no forced metaphors.
-- Commercially grounded: tie capabilities to outcomes (revenue, cost, risk, engagement, decision quality).
-- Responsibly confident: no guarantee language; bounded claims; extra caution for Bet.
-- Globally clear: avoid idioms/slang; easy to translate.
+CORE BRAND THESIS
+Genius Sports is the operational layer that transforms every on-field moment into reliable, real-time intelligence and measurable commercial value for leagues, broadcasters, brands and sportsbooks.
+
+PRIMARY IDENTITY
+- Infrastructure, not a point solution.
+- Operator and Analyst archetype (systems-level, data-driven, measured confidence).
+- Sport-native fluency without gimmicks.
+- Optimistic about the future of sport, but grounded in proof.
+
+NON-NEGOTIABLES
+1) Evidence-led authority.
+   - Pair claims with named products, partners, metrics, or mechanisms.
+   - Prefer: GeniusIQ, FANHub, BetVision, LiveStats, official data feeds.
+   - Avoid unprovable superlatives.
+
+2) Precise and specific.
+   - Active voice.
+   - Concrete nouns (feeds, overlays, betslip, computer vision, identity graph, low-latency APIs).
+   - If “real-time” is used, state how (e.g., official low-latency feeds + automated trading engine).
+
+3) Sport-native, not gimmicky.
+   - Use sport terminology functionally (offside automation, live stats, replay augmentation).
+   - No forced metaphors, no slang, no idioms.
+
+4) Commercially grounded.
+   - Tie capabilities directly to outcomes:
+     revenue growth, in-play turnover, engagement lift, time-on-site,
+     operational efficiency, decision accuracy, inventory monetisation.
+   - State scope or conditions where appropriate.
+
+5) Responsibly confident.
+   - No guarantees. No “always,” “never,” “risk-free,” “can’t miss.”
+   - Especially cautious in betting contexts.
+   - Use bounded language: “helps increase,” “designed to improve,” “supports.”
+
+6) Globally clear.
+   - Short-to-medium sentences.
+   - Simple grammar.
+   - Easy to translate across markets.
+
+MANDATORY PROOF STRUCTURE (DEFAULT PATTERN)
+When making a substantive claim, follow this structure:
+[Partner / Customer / Market] +
+[Named Product] +
+[Specific Mechanism / Technology] +
+[Commercial or Performance Outcome]
+
+Example pattern:
+“Using GeniusIQ’s computer vision and real-time tracking data, [Partner] enhanced broadcast overlays and increased viewer engagement during live games.”
+
+PRODUCT-FIRST RULE
+Name the product before the capability.
+- Strong: “GeniusIQ processes real-time tracking data to power contextual broadcast graphics.”
+- Weak: “Our AI platform processes data to power graphics.”
+
+REAL-TIME RULE
+If you say “real-time,” clarify mechanism or cadence:
+- low-latency official data feeds
+- automated odds engine
+- computer vision models
+- live streaming integration
+- in-game event triggers
+
+AUDIENCE DIALS
+
+Leagues & Teams:
+- Analytical, performance-oriented.
+- Emphasise decision quality, officiating accuracy, player performance insights.
+- Technical clarity > marketing flourish.
+
+Broadcasters & Media:
+- Focus on augmented viewing, automated highlights, monetisable overlays.
+- Tie innovation to audience growth and inventory value.
+
+Brands & Advertisers:
+- Emphasise FANHub, identity resolution, audience segmentation.
+- Tie to measurable campaign outcomes and activation efficiency.
+
+Sportsbooks & Operators:
+- Commercially direct but compliance-aware.
+- Focus on in-play engagement, trading accuracy, uptime, product integration.
+- No implication of betting guarantees.
+
+Investors / Corporate:
+- Formal, metric-forward, structured.
+- Use defined terms where appropriate.
+- Avoid hype language entirely.
+
+TONE CHARACTERISTICS
+- Confident but measured.
+- System-level perspective.
+- Data-native and technology-literate.
+- Outcome-oriented.
+- Forward-looking, but not speculative.
+
+PREFERRED VERBS
+power, enable, connect, transform, contextualise, automate,
+activate, optimise, streamline, ingest, distribute, enhance,
+support, scale, unlock (sparingly)
+
+AVOID
+revolutionary, unbeatable, guaranteed, always, never,
+game-changer (unless supported by proof),
+risk-free, slang, idioms, hype-heavy phrasing
+
+HEADLINE GUIDELINES
+- Short, declarative.
+- Can use controlled fragments for campaign tone.
+- No exclamation marks.
+- No exaggerated claims.
+
+CLAIM CALIBRATION
+Every material claim must answer at least one:
+- How does it work?
+- For whom?
+- Toward what measurable outcome?
+- Under what scope or condition?
+
+If those are not clear, the copy is not aligned with Genius Sports’ brand voice.
 `.trim();
 
 const RUBRIC = `
@@ -117,7 +229,10 @@ export async function rewriteWithLLM(params: {
   const prompt = `
 Rewrite this marketing copy according to constraints.
 Return strict JSON only with:
-{ "revisedCopy": "string", "changeLog": ["string"] }
+{
+  "revisedCopy": "string",
+  "changeLog": ["string"]
+}
 
 Rules:
 - Preserve meaning; do not invent facts, metrics, partnerships, certifications, or claims.
@@ -151,9 +266,69 @@ ${params.originalCopy}
     if (!raw) return null;
     const parsed = JSON.parse(raw) as { revisedCopy?: unknown; changeLog?: unknown };
     if (typeof parsed.revisedCopy !== "string") return null;
-    const changeLog = Array.isArray(parsed.changeLog) ? parsed.changeLog.filter((v): v is string => typeof v === "string") : [];
+    const changeLog = Array.isArray(parsed.changeLog)
+      ? parsed.changeLog.filter((v): v is string => typeof v === "string" && v.trim().length > 0)
+      : [];
     return { revisedCopy: parsed.revisedCopy, changeLog };
   } catch {
     return null;
+  }
+}
+
+export async function* rewriteWithLLMStream(params: {
+  originalCopy: string;
+  analysis: Analysis;
+  contentType: AnalyzeRequest["meta"]["contentType"];
+}): AsyncGenerator<{ chunk: string; fullRevisedCopy: string }> {
+  const client = getClient();
+  if (!client) return;
+
+  const lengthRule =
+    params.contentType === "Social"
+      ? "Length can change as needed for social clarity."
+      : "Keep revised length within +/-15% of original.";
+
+  const prompt = `
+Rewrite this marketing copy according to constraints.
+Output ONLY the revised copy. No JSON, no explanation, no labels—just the revised text.
+
+Rules:
+- Preserve meaning; do not invent facts, metrics, partnerships, certifications, or claims.
+- Remove banned/gimmicky language and any guaranteed outcome language.
+- Add specificity only by reorganizing existing details.
+- Add AEO blocks if missing: definition + FAQ placeholders such as [DEFINE TERM], [PROOF NEEDED].
+- ${lengthRule}
+
+Analysis context:
+${JSON.stringify(params.analysis)}
+
+Original copy:
+${params.originalCopy}
+`.trim();
+
+  try {
+    const stream = await client.chat.completions.create({
+      model: MODEL,
+      temperature: 0.2,
+      stream: true,
+      messages: [
+        {
+          role: "system",
+          content: "You are a compliance-conscious copy editor. Output only the revised copy, nothing else."
+        },
+        { role: "user", content: prompt }
+      ]
+    });
+
+    let fullRevisedCopy = "";
+    for await (const part of stream) {
+      const text = part.choices[0]?.delta?.content ?? "";
+      if (text) {
+        fullRevisedCopy += text;
+        yield { chunk: text, fullRevisedCopy };
+      }
+    }
+  } catch {
+    // Generator will simply stop; caller can treat as failure if fullRevisedCopy is empty
   }
 }

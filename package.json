@@ -6,13 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "harness:replace": "node scripts/harness-replace-edit.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "Genius Voice + Visibility QA POC",
   "dependencies": {
+    "diff": "^8.0.3",
     "next": "^14.2.35",
     "openai": "^6.25.0",
     "react": "^18.3.1",
