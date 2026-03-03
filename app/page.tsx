@@ -85,6 +85,18 @@ export default function Page() {
   const [isEditorRewriting, setIsEditorRewriting] = useState(false);
   const [selectedIssueIndex, setSelectedIssueIndex] = useState<number | null>(null);
 
+  // URL import — Analysis panel
+  const [urlInput, setUrlInput] = useState("");
+  const [isImporting, setIsImporting] = useState(false);
+  const [importError, setImportError] = useState("");
+  const [importedFrom, setImportedFrom] = useState<string | null>(null);
+
+  // URL import — Copy Editor panel
+  const [editorUrlInput, setEditorUrlInput] = useState("");
+  const [isEditorImporting, setIsEditorImporting] = useState(false);
+  const [editorImportError, setEditorImportError] = useState("");
+  const [editorImportedFrom, setEditorImportedFrom] = useState<string | null>(null);
+
   const copyRef = useRef<HTMLTextAreaElement>(null);
   const groupedIssues = useMemo(() => {
     if (!analysis) return { voice: [], seo: [], aeo: [] } as const;
@@ -172,6 +184,52 @@ export default function Page() {
       setEditorError("Unable to read the uploaded file.");
     } finally {
       event.target.value = "";
+    }
+  };
+
+  const handleImportUrl = async () => {
+    if (!urlInput.trim()) return;
+    setImportError("");
+    setImportedFrom(null);
+    setIsImporting(true);
+    try {
+      const response = await fetch("/api/import-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: urlInput.trim() }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error ?? "Import failed.");
+      updateForm("copy", data.text);
+      setImportedFrom(data.url);
+      setError("");
+    } catch (err) {
+      setImportError(err instanceof Error ? err.message : "Import failed.");
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
+  const handleEditorImportUrl = async () => {
+    if (!editorUrlInput.trim()) return;
+    setEditorImportError("");
+    setEditorImportedFrom(null);
+    setIsEditorImporting(true);
+    try {
+      const response = await fetch("/api/import-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: editorUrlInput.trim() }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error ?? "Import failed.");
+      setEditorInput(data.text);
+      setEditorImportedFrom(data.url);
+      setEditorError("");
+    } catch (err) {
+      setEditorImportError(err instanceof Error ? err.message : "Import failed.");
+    } finally {
+      setIsEditorImporting(false);
     }
   };
 
@@ -461,6 +519,37 @@ export default function Page() {
                   </div>
 
                   <div className="form-group">
+                    <label htmlFor="analysisUrlInput">Import via link</label>
+                    <div className="flex gap-2">
+                      <input
+                        id="analysisUrlInput"
+                        type="url"
+                        value={urlInput}
+                        onChange={(e) => { setUrlInput(e.target.value); setImportError(""); }}
+                        placeholder="https://example.com/article"
+                        className="flex-1"
+                      />
+                      <button
+                        type="button"
+                        className="button button-outline"
+                        onClick={handleImportUrl}
+                        disabled={isImporting || !urlInput.trim()}
+                        style={{ minWidth: "6rem" }}
+                      >
+                        {isImporting ? "Importing…" : "Import"}
+                      </button>
+                    </div>
+                    {importError && (
+                      <p className="mt-1 mb-0 text-sm" style={{ color: "var(--color-orange)" }}>{importError}</p>
+                    )}
+                    {importedFrom && !importError && (
+                      <p className="mt-1 mb-0 text-sm" style={{ color: "var(--color-navy)", opacity: 0.6 }}>
+                        Imported from {importedFrom}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="form-group">
                     <label htmlFor="copy">Copy</label>
                     <textarea
                       ref={copyRef}
@@ -655,6 +744,38 @@ export default function Page() {
                     <label htmlFor="editorUpload">Upload copy file</label>
                     <input id="editorUpload" type="file" accept=".txt,.md,.csv,text/plain,text/markdown" onChange={handleEditorUpload} />
                   </div>
+
+                  <div className="form-group">
+                    <label htmlFor="editorUrlInput">Import via link</label>
+                    <div className="flex gap-2">
+                      <input
+                        id="editorUrlInput"
+                        type="url"
+                        value={editorUrlInput}
+                        onChange={(e) => { setEditorUrlInput(e.target.value); setEditorImportError(""); }}
+                        placeholder="https://example.com/article"
+                        className="flex-1"
+                      />
+                      <button
+                        type="button"
+                        className="button button-outline"
+                        onClick={handleEditorImportUrl}
+                        disabled={isEditorImporting || !editorUrlInput.trim()}
+                        style={{ minWidth: "6rem" }}
+                      >
+                        {isEditorImporting ? "Importing…" : "Import"}
+                      </button>
+                    </div>
+                    {editorImportError && (
+                      <p className="mt-1 mb-0 text-sm" style={{ color: "var(--color-orange)" }}>{editorImportError}</p>
+                    )}
+                    {editorImportedFrom && !editorImportError && (
+                      <p className="mt-1 mb-0 text-sm" style={{ color: "var(--color-navy)", opacity: 0.6 }}>
+                        Imported from {editorImportedFrom}
+                      </p>
+                    )}
+                  </div>
+
                   <div className="form-group">
                     <label htmlFor="editorInput">Paste copy</label>
                     <textarea

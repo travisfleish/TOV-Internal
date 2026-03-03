@@ -123,6 +123,17 @@ export const rewriteResponseSchema = z.object({
   meta: rewriteMetaSchema
 });
 
+export const importUrlRequestSchema = z.object({
+  url: z.string().url()
+});
+
+export const importUrlResponseSchema = z.object({
+  url: z.string(),
+  title: z.string().optional(),
+  text: z.string().min(1),
+  wordCount: z.number().int().nonnegative()
+});
+
 export type AnalyzeRequest = z.infer<typeof analyzeRequestSchema>;
 export type Analysis = z.infer<typeof analysisSchema>;
 export type Issue = z.infer<typeof issueSchema>;
@@ -131,3 +142,5 @@ export type Span = z.infer<typeof spanSchema>;
 export type Edit = z.infer<typeof editSchema>;
 export type RedlineSegment = z.infer<typeof redlineSegmentSchema>;
 export type RewriteResponse = z.infer<typeof rewriteResponseSchema>;
+export type ImportUrlRequest = z.infer<typeof importUrlRequestSchema>;
+export type ImportUrlResponse = z.infer<typeof importUrlResponseSchema>;

@@ -14,7 +14,9 @@
   "license": "ISC",
   "description": "Genius Voice + Visibility QA POC",
   "dependencies": {
+    "@mozilla/readability": "^0.6.0",
     "diff": "^8.0.3",
+    "jsdom": "^28.1.0",
     "next": "^14.2.35",
     "openai": "^6.25.0",
     "react": "^18.3.1",
@@ -22,6 +24,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@types/jsdom": "^28.0.0",
     "@types/node": "^25.3.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
