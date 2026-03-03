@@ -351,7 +351,7 @@ export default function Page() {
               onClick={() => setWorkspaceMode("copyEditor")}
                 aria-pressed={workspaceMode === "copyEditor"}
             >
-              Copy editor
+              Copy Editor
             </button>
             </div>
           </div>
