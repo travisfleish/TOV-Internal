@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import type { Analysis, RedlineSegment, Span } from "@/lib/schema";
 
@@ -85,6 +85,10 @@ export default function Page() {
   const [isEditorRewriting, setIsEditorRewriting] = useState(false);
   const [selectedIssueIndex, setSelectedIssueIndex] = useState<number | null>(null);
 
+  // Textarea expand
+  const [isCopyExpanded, setIsCopyExpanded] = useState(false);
+  const [isEditorExpanded, setIsEditorExpanded] = useState(false);
+
   // URL import — Analysis panel
   const [urlInput, setUrlInput] = useState("");
   const [isImporting, setIsImporting] = useState(false);
@@ -98,6 +102,31 @@ export default function Page() {
   const [editorImportedFrom, setEditorImportedFrom] = useState<string | null>(null);
 
   const copyRef = useRef<HTMLTextAreaElement>(null);
+  const editorInputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Expand textareas to exact content height when expanded
+  useLayoutEffect(() => {
+    const ta = copyRef.current;
+    if (!ta) return;
+    if (isCopyExpanded) {
+      ta.style.height = "auto";
+      ta.style.height = `${ta.scrollHeight}px`;
+    } else {
+      ta.style.height = "";
+    }
+  }, [isCopyExpanded, form.copy]);
+
+  useLayoutEffect(() => {
+    const ta = editorInputRef.current;
+    if (!ta) return;
+    if (isEditorExpanded) {
+      ta.style.height = "auto";
+      ta.style.height = `${ta.scrollHeight}px`;
+    } else {
+      ta.style.height = "";
+    }
+  }, [isEditorExpanded, editorInput]);
+
   const groupedIssues = useMemo(() => {
     if (!analysis) return { voice: [], seo: [], aeo: [] } as const;
     return {
@@ -550,7 +579,19 @@ export default function Page() {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="copy">Copy</label>
+                    <div className="flex items-center justify-between mb-2">
+                      <label htmlFor="copy" className="mb-0">Copy</label>
+                      {form.copy.trim() && (
+                        <button
+                          type="button"
+                          className="text-sm font-medium"
+                          style={{ color: "var(--color-blue)" }}
+                          onClick={() => setIsCopyExpanded((v) => !v)}
+                        >
+                          {isCopyExpanded ? "Collapse" : "Expand"}
+                        </button>
+                      )}
+                    </div>
                     <textarea
                       ref={copyRef}
                       id="copy"
@@ -777,11 +818,24 @@ export default function Page() {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="editorInput">Paste copy</label>
+                    <div className="flex items-center justify-between mb-2">
+                      <label htmlFor="editorInput" className="mb-0">Paste copy</label>
+                      {editorInput.trim() && (
+                        <button
+                          type="button"
+                          className="text-sm font-medium"
+                          style={{ color: "var(--color-blue)" }}
+                          onClick={() => setIsEditorExpanded((v) => !v)}
+                        >
+                          {isEditorExpanded ? "Collapse" : "Expand"}
+                        </button>
+                      )}
+                    </div>
                     <textarea
                       id="editorInput"
                       value={editorInput}
                       onChange={(e) => setEditorInput(e.target.value)}
+                      ref={editorInputRef}
                       className="min-h-[320px]"
                       placeholder="Paste copy here or upload a file..."
                     />
