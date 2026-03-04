@@ -1,13 +1,5 @@
 2# Genius Sports AEO Execution Blueprint
 
-## Method, scope, and what this analysis can and cannot verify
-
-This blueprint customizes the attached AEO Playbook to Genius Sports’ real, current web footprint and the way answer engines assemble responses from public web sources. fileciteturn0file0  
-
-Primary sources for this analysis include Genius Sports’ marketing site and product pages (geniussports.com), its investor relations site (investors.geniussports.com), SEC filings (EDGAR), and high-authority third-party references that answer engines frequently cite (e.g., Wikipedia and league/news outlets). citeturn14view0turn32view1turn21view0turn5search0turn26view9
-
-Because Google AI Overviews, Bing Copilot, and Perplexity outputs aren’t directly queryable from here, “answer engine simulation” is based on (a) what reliably ranks for representative conversational queries, and (b) what sources are structurally most “citable” and commonly used by answer engines (Wikipedia/Knowledge Graph, SEC filings, league sites, Business Wire, major trade outlets). This approach is directionally accurate for narrative control and AEO planning, but you should validate with an internal prompt-monitoring workflow (defined in the roadmap) once implementation begins. citeturn5search0turn21view0turn26view9turn36view0
-
 ## Company and product landscape findings
 
 ### Public web properties and indexable surface area
