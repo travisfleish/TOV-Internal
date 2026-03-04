@@ -343,14 +343,20 @@ export async function fetchAndExtract(
   // Run all three strategies, pick the one with the most words
   const candidates: { text: string; title?: string }[] = [];
 
-  const r1 = readabilityExtract(body, finalUrl.href);
-  if (r1) candidates.push(r1);
+  try {
+    const r1 = readabilityExtract(body, finalUrl.href);
+    if (r1) candidates.push(r1);
+  } catch { /* ignore parse errors from Readability/JSDOM */ }
 
-  const r2 = aggressiveExtract(body, finalUrl.href);
-  if (wordCount(r2) >= MIN_WORDS) candidates.push({ text: r2 });
+  try {
+    const r2 = aggressiveExtract(body, finalUrl.href);
+    if (wordCount(r2) >= MIN_WORDS) candidates.push({ text: r2 });
+  } catch { /* ignore parse errors from aggressive DOM walk */ }
 
-  const r3 = nextDataExtract(body);
-  if (r3) candidates.push(r3);
+  try {
+    const r3 = nextDataExtract(body);
+    if (r3) candidates.push(r3);
+  } catch { /* ignore parse errors from JSON extraction */ }
 
   // Pick the candidate with the most words
   let best: { text: string; title?: string } | null = null;

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import type { Analysis, RedlineSegment, Span } from "@/lib/schema";
@@ -227,8 +228,10 @@ export default function Page() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: urlInput.trim() }),
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data?.error ?? "Import failed.");
+      const text = await response.text();
+      let data: Record<string, string> = {};
+      try { data = JSON.parse(text); } catch { /* non-JSON error response */ }
+      if (!response.ok) throw new Error(data.error ?? "Import failed.");
       updateForm("copy", data.text);
       setImportedFrom(data.url);
       setError("");
@@ -250,7 +253,9 @@ export default function Page() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: editorUrlInput.trim() }),
       });
-      const data = await response.json();
+      const text = await response.text();
+      let data: Record<string, string> = {};
+      try { data = JSON.parse(text); } catch { /* non-JSON error response */ }
       if (!response.ok) throw new Error(data?.error ?? "Import failed.");
       setEditorInput(data.text);
       setEditorImportedFrom(data.url);
@@ -388,7 +393,7 @@ export default function Page() {
     <>
       <section className="pt-0 pb-6 md:pb-8">
         <div className="container fade-in">
-          <div className="flex items-start">
+          <div className="flex items-center justify-between">
             <Image
               src="/brand/genius-logo-full.png"
               alt="Genius Sports"
@@ -397,6 +402,15 @@ export default function Page() {
               className="h-auto w-[130px] sm:w-[180px]"
               priority
             />
+            <nav aria-label="Site navigation">
+              <Link
+                href="/aeo-guidebook"
+                className="button button-outline"
+                style={{ fontSize: "0.875rem", padding: "0.5rem 1.125rem" }}
+              >
+                AEO Guidebook
+              </Link>
+            </nav>
           </div>
           <div className="mt-7 text-center">
             <h1 className="mt-0 mb-3 text-[2.45rem] leading-tight md:text-[2.65rem]">Voice + Visibility QA</h1>
