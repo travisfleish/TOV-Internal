@@ -2,6 +2,9 @@
   "name": "tone-of-voice",
   "version": "1.0.0",
   "private": true,
+  "overrides": {
+    "html-encoding-sniffer": "2.0.1"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
