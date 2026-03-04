@@ -310,15 +310,46 @@ export default function AeoGuidebookPage() {
         {/* ── Section 4: Trust & defensibility ── */}
         <GuidebookSection id="trust" title="Trust & defensibility">
           <p>
-            Answer engines are trained to evaluate the plausibility and
-            consistency of claims. Content that overclaims, contradicts itself
-            across pages, or relies on unsupported superlatives tends to get
-            deprioritized in synthesis. Trust is earned through qualified,
-            evidence-anchored writing.
+            E-E-A-T stands for <strong>Experience, Expertise,
+            Authoritativeness, and Trustworthiness</strong>. It originated in
+            Google&apos;s Search Quality Rater Guidelines as a framework for
+            human evaluators to assess content quality, and has since been
+            adopted—explicitly or implicitly—by the ranking and synthesis logic
+            of most major answer engines. Models weight content more heavily
+            when it demonstrates credible, first-hand knowledge, consistent
+            positioning, and claims that can be independently verified.
+          </p>
+          <p>
+            For AEO, E-E-A-T is less about structured markup and more about
+            writing behaviour: how you qualify claims, what evidence you anchor
+            them to, and whether your content sounds like it was written by
+            someone who actually knows the subject. Three of the four dimensions
+            map directly onto copy structure and are covered below.
           </p>
 
+          <Callout variant="info">
+            <p style={{ margin: 0 }}>
+              <strong>Why Experience isn&apos;t a sub-section here.</strong>{" "}
+              In consumer and editorial publishing, the &ldquo;Experience&rdquo;
+              dimension is demonstrated through first-hand narrative—a doctor
+              writing from clinical practice, a mechanic from the garage floor.
+              In B2B brand content, Experience signals work differently: they
+              live in proof points rather than prose structure—customer case
+              studies, proprietary benchmark data, named authors with verifiable
+              credentials, and third-party validation. Those are content
+              strategy and programme decisions, not copy-writing patterns. This
+              guide focuses on structural writing mechanics that apply to every
+              piece you publish; Experience-layer signals (case studies, data
+              reports, author bios) deserve their own programme guidance and are
+              outside this scope.
+            </p>
+          </Callout>
+
           <h3 style={{ marginTop: "var(--space-5)" }}>
-            Qualify claims with scope and conditions
+            Qualify claims with scope and conditions{" "}
+            <span style={{ fontWeight: 400, opacity: 0.55, fontSize: "0.9rem" }}>
+              — Authoritativeness
+            </span>
           </h3>
           <p>
             Don&apos;t write "the fastest platform." Write "the fastest platform
@@ -355,7 +386,10 @@ export default function AeoGuidebookPage() {
           />
 
           <h3 style={{ marginTop: "var(--space-5)" }}>
-            Add evidence without turning it into a research paper
+            Add evidence without turning it into a research paper{" "}
+            <span style={{ fontWeight: 400, opacity: 0.55, fontSize: "0.9rem" }}>
+              — Expertise
+            </span>
           </h3>
           <p>
             A single well-placed data point is worth more than three paragraphs
@@ -370,7 +404,10 @@ export default function AeoGuidebookPage() {
           </p>
 
           <h3 style={{ marginTop: "var(--space-5)" }}>
-            State limitations without undermining positioning
+            State limitations without undermining positioning{" "}
+            <span style={{ fontWeight: 400, opacity: 0.55, fontSize: "0.9rem" }}>
+              — Trustworthiness
+            </span>
           </h3>
           <p>
             Acknowledging scope boundaries increases credibility with answer
