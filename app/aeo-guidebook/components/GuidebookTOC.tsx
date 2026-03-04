@@ -39,25 +39,28 @@ export function GuidebookTOC({ sections }: GuidebookTOCProps) {
   const navList = (
     <nav aria-label="Page sections">
       <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-        {sections.map(({ id, tocLabel }) => {
+        {sections.map(({ id, tocLabel, level }) => {
           const isActive = activeId === id;
+          const isSubItem = level === 3;
           return (
             <li key={id}>
               <a
                 href={`#${id}`}
                 style={{
                   display: "block",
-                  padding: "0.375rem 0.75rem",
+                  padding: "0.3rem 0.75rem",
+                  paddingLeft: isSubItem ? "1.5rem" : "0.75rem",
                   borderRadius: "var(--radius-md)",
                   textDecoration: "none",
                   color: isActive ? "var(--color-blue)" : "var(--color-navy)",
                   fontWeight: isActive ? 500 : 400,
+                  opacity: isSubItem && !isActive ? 0.75 : 1,
                   background: isActive ? "rgba(0,0,220,0.06)" : "transparent",
                   borderLeft: isActive
                     ? "2px solid var(--color-blue)"
                     : "2px solid transparent",
                   transition: "all 0.15s ease",
-                  fontSize: "0.9375rem",
+                  fontSize: isSubItem ? "0.875rem" : "0.9375rem",
                   lineHeight: 1.4,
                   marginBottom: "0.125rem",
                 }}

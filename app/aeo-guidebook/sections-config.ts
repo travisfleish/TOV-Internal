@@ -2,6 +2,7 @@ export interface SectionConfig {
   id: string;
   title: string;
   tocLabel: string;
+  level?: number; // heading depth: 2 (default) or 3 (indented in TOC)
 }
 
 export const SECTIONS: SectionConfig[] = [
