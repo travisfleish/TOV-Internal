@@ -402,13 +402,20 @@ export default function Page() {
               className="h-auto w-[130px] sm:w-[180px]"
               priority
             />
-            <nav aria-label="Site navigation">
+            <nav aria-label="Site navigation" className="flex items-center gap-2">
               <Link
                 href="/aeo-guidebook"
                 className="button button-outline"
                 style={{ fontSize: "0.875rem", padding: "0.5rem 1.125rem" }}
               >
                 AEO Guidebook
+              </Link>
+              <Link
+                href="/deep-research-report"
+                className="button button-outline"
+                style={{ fontSize: "0.875rem", padding: "0.5rem 1.125rem" }}
+              >
+                Deep Research Report
               </Link>
             </nav>
           </div>

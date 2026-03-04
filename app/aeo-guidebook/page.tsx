@@ -37,7 +37,14 @@ export default function AeoGuidebookPage() {
                 priority
               />
             </Link>
-            <nav aria-label="Site navigation">
+            <nav aria-label="Site navigation" className="flex items-center gap-2">
+              <Link
+                href="/deep-research-report"
+                className="button button-outline"
+                style={{ fontSize: "0.9375rem", padding: "0.5rem 1.25rem" }}
+              >
+                Deep Research Report
+              </Link>
               <Link
                 href="/"
                 className="button button-outline"
