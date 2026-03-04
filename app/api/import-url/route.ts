@@ -1,5 +1,8 @@
 import "server-only";
 import { NextResponse } from "next/server";
+
+// Uses Node APIs (dns, net) in lib/url-import/security — must run in Node runtime.
+export const runtime = "nodejs";
 import { importUrlRequestSchema } from "@/lib/schema";
 import { validateUrl, UrlImportError } from "@/lib/url-import/security";
 import { fetchAndExtract } from "@/lib/url-import/extract";
@@ -104,6 +107,7 @@ export async function POST(request: Request) {
     const durationMs = Date.now() - t0;
     const code =
       err instanceof UrlImportError ? err.code : "UNKNOWN";
+    const detail = err instanceof Error ? err.message : String(err);
 
     console.log(
       JSON.stringify({
@@ -111,6 +115,7 @@ export async function POST(request: Request) {
         status: code,
         domain: safeUrl?.hostname ?? "unknown",
         durationMs,
+        detail: code === "UNKNOWN" ? detail : undefined,
       })
     );
 

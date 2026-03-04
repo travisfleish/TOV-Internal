@@ -265,11 +265,13 @@ async function safeFetch(
 
     let response: Response;
     try {
+      // Use a browser-like User-Agent so target sites don't block server/datacenter requests (common in production).
       response = await fetch(currentUrl.href, {
         redirect: "manual",
         signal: controller.signal,
         headers: {
-          "User-Agent": "ToneOfVoiceBot/1.0 (content import; contact: internal)",
+          "User-Agent":
+            "Mozilla/5.0 (compatible; ToneOfVoice/1.0; +https://github.com/genius/tone-of-voice; content import)",
           Accept: "text/html,application/xhtml+xml",
           "Accept-Encoding": "identity",
         },
