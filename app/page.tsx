@@ -70,6 +70,9 @@ const isRedlineSegment = (value: unknown): value is RedlineSegment => {
   return true;
 };
 
+/** Temporarily hide URL import UI while the feature is not working. Set to true to re-enable. */
+const SHOW_URL_IMPORT = false;
+
 export default function Page() {
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("analysis");
   const [form, setForm] = useState<FormState>(initialForm);
@@ -568,6 +571,7 @@ export default function Page() {
                     <input id="analysisUpload" type="file" accept=".txt,.md,.csv,text/plain,text/markdown" onChange={handleAnalysisUpload} />
                   </div>
 
+                  {SHOW_URL_IMPORT && (
                   <div className="form-group">
                     <label htmlFor="analysisUrlInput">Import via link</label>
                     <div className="flex gap-2">
@@ -598,6 +602,7 @@ export default function Page() {
                       </p>
                     )}
                   </div>
+                  )}
 
                   <div className="form-group">
                     <div className="flex items-center justify-between mb-2">
@@ -807,6 +812,7 @@ export default function Page() {
                     <input id="editorUpload" type="file" accept=".txt,.md,.csv,text/plain,text/markdown" onChange={handleEditorUpload} />
                   </div>
 
+                  {SHOW_URL_IMPORT && (
                   <div className="form-group">
                     <label htmlFor="editorUrlInput">Import via link</label>
                     <div className="flex gap-2">
@@ -837,6 +843,7 @@ export default function Page() {
                       </p>
                     )}
                   </div>
+                  )}
 
                   <div className="form-group">
                     <div className="flex items-center justify-between mb-2">
