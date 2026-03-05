@@ -26,7 +26,7 @@ function p(text) {
 
 function h2(text) {
   return new Paragraph({
-    text,
+    children: [new TextRun({ text, size: 28 })], // 14pt — section header
     heading: HeadingLevel.HEADING_1,
     spacing: { before: 320, after: 200 },
   });
@@ -34,7 +34,7 @@ function h2(text) {
 
 function h3(text) {
   return new Paragraph({
-    text,
+    children: [new TextRun({ text, size: 22 })], // 11pt — subheader size, smaller than section headers
     heading: HeadingLevel.HEADING_2,
     spacing: { before: 280, after: 160 },
   });

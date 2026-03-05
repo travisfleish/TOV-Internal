@@ -246,6 +246,11 @@ pre {
   color: var(--color-white);
 }
 
+/* Guidebook: subheaders (h3) smaller than section headers (h2) */
+#guidebook-content h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
 
 /* ===================================================
    8. FORM SYSTEM
