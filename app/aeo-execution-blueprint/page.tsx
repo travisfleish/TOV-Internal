@@ -52,27 +52,67 @@ function stripCitations(md: string): string {
 const QUOTED_STRING = /["\u201C]([^"\u201D]*?)["\u201D]/g;
 
 /**
- * Convert "Query fan-out set" lines from semicolon-separated quoted strings
- * into markdown bullet lists for clearer display.
+ * Convert "Query fan-out set" blocks into structured markdown with section headers.
+ *
+ * Input format:
+ *   **Query fan-out set**
+ *   Primary: "query"
+ *   Secondary buyer questions: "q1"; "q2"; ...
+ *   Implementation: "q1"; "q2"; ...
+ *   Risk/limitations: "q1"; "q2"; ...
+ *   Comparisons: "q1"; "q2"; ...
+ *
+ * Output format:
+ *   #### Query fan-out set
+ *
+ *   Primary
+ *   <primary query>
+ *
+ *   **Secondary Buyer Questions**
+ *   - "q1"
+ *   - "q2"
+ *
+ *   **Implementation**
+ *   - "q1"
+ *
+ *   **Risk Limitations**
+ *   - "q1"
+ *
+ *   **Comparisons**
+ *   - "q1"
  */
 function formatQueryFanOutSets(md: string): string {
   const linePattern =
     /^(Primary|Secondary buyer questions|Implementation|Risk\/limitations|Comparisons):\s*(.+)$/;
   const lines = md.split("\n");
   const out: string[] = [];
+  let lastWasFanOutHeading = false;
 
   for (const line of lines) {
+    // Convert bold "Query fan-out set" marker to a real heading
+    if (/^\*\*Query fan-out set\*\*\s*$/.test(line.trim())) {
+      out.push("#### Query fan-out set");
+      out.push("");
+      lastWasFanOutHeading = true;
+      continue;
+    }
+
     const m = line.match(linePattern);
     if (!m) {
+      if (lastWasFanOutHeading) lastWasFanOutHeading = false;
       out.push(line);
       continue;
     }
     const [, label, rest] = m;
     const trimmed = rest.trim();
+
     if (label === "Primary") {
-      out.push(`**Primary:** ${trimmed}`);
+      out.push("**Primary**");
+      out.push(trimmed);
+      out.push("");
       continue;
     }
+
     const items: string[] = [];
     let match: RegExpExecArray | null;
     QUOTED_STRING.lastIndex = 0;
@@ -83,10 +123,17 @@ function formatQueryFanOutSets(md: string): string {
       out.push(line);
       continue;
     }
-    out.push(`**${label}:**`);
+    const sectionTitles: Record<string, string> = {
+      "Secondary buyer questions": "**Secondary Buyer Questions**",
+      Implementation: "**Implementation**",
+      "Risk/limitations": "**Risk Limitations**",
+      Comparisons: "**Comparisons**",
+    };
+    out.push(sectionTitles[label] ?? `**${label}**`);
     for (const item of items) {
       out.push(`- "${item}"`);
     }
+    out.push("");
   }
 
   return out.join("\n");

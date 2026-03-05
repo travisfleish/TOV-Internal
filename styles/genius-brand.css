@@ -420,3 +420,71 @@ label {
 .scale-on-hover:hover {
   transform: scale(1.03);
 }
+
+
+/* ===================================================
+   14. AEO BLUEPRINT MARKDOWN
+   =================================================== */
+
+/* Subheaders (bold in markdown) stand out from body copy */
+.blueprint-markdown strong {
+  font-weight: 700;
+}
+
+.blueprint-markdown table thead th {
+  font-weight: 700;
+}
+
+.blueprint-markdown table tbody td:first-child {
+  font-weight: 700;
+}
+
+/* Only the primary column (first cell) and detail subheaders are bold; all other body copy is normal */
+.blueprint-markdown .blueprint-section-main td:first-child {
+  font-weight: 700;
+}
+.blueprint-markdown .blueprint-section-main td:first-child strong {
+  font-weight: 700;
+}
+.blueprint-markdown .blueprint-section-main td:not(:first-child) {
+  font-weight: 400;
+}
+.blueprint-markdown .blueprint-section-main td:not(:first-child) strong {
+  font-weight: 400;
+}
+
+/* Detail blocks: only the subheader label (direct-child strong) is bold; body copy and any other strong are normal */
+.blueprint-markdown .blueprint-detail-block {
+  font-weight: 400;
+}
+.blueprint-markdown .blueprint-detail-block strong {
+  font-weight: 400;
+}
+.blueprint-markdown .blueprint-detail-block > strong {
+  font-weight: 700;
+}
+
+/* Full-width detail rows: text-rich columns rendered below each main row */
+.blueprint-markdown .blueprint-detail-row td {
+  font-size: 0.9375rem;
+}
+
+/* Bordered section: each logical row (main + detail blocks) wrapped for readability */
+.blueprint-markdown .blueprint-section {
+  border: 2px solid #000;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.blueprint-markdown .blueprint-section:last-child {
+  margin-bottom: 0;
+}
+.blueprint-markdown .blueprint-section-main {
+  margin: 0;
+}
+.blueprint-markdown .blueprint-section-main td:last-child {
+  border-right: none;
+}
+.blueprint-markdown .blueprint-detail-block {
+  font-size: 0.9375rem;
+}

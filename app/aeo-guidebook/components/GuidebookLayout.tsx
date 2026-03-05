@@ -26,8 +26,12 @@ export function GuidebookLayout({ sections, children }: GuidebookLayoutProps) {
         {/* TOC column — renders sticky block on desktop, collapsible on mobile */}
         <GuidebookTOC sections={sections} />
 
-        {/* Main content */}
-        <main id="guidebook-content" tabIndex={-1} style={{ outline: "none" }}>
+        {/* Main content — constrained so tables/prose don't bleed off */}
+        <main
+          id="guidebook-content"
+          tabIndex={-1}
+          style={{ outline: "none", maxWidth: "52rem" }}
+        >
           {children}
         </main>
       </div>

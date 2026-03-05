@@ -8,10 +8,10 @@ Genius’ public footprint is large and fragmented across marketing, investor, A
 
 | Property | What it appears to be used for | AEO relevance and risks |
 |---|---|---|
-| `https://www.geniussports.com/` | Primary marketing site positioning and product navigation (Perform / Engage / Bet / GeniusIQ / Data Capture / Sports Data API). citeturn14view0turn14view1 | Critical. This is where Genius should “own the definition” of its entity and products for answer engines. Current messaging is broad and multi-category (good for breadth, risky for entity crispness). citeturn14view0turn35view2 |
-| `https://investors.geniussports.com/` | Investor relations, press releases, financial results (Q4 platform). citeturn4search5turn36view0 | Extremely high authority for “how does Genius make money / profitability / segments” queries; currently more extractable than the marketing newsroom for many announcements. citeturn32view1turn36view0 |
-| `https://developer.geniussports.com/` | Developer center / reference docs for APIs. citeturn4search11 | High AEO value for “API / integration / docs” queries if it’s kept clean, canonical, and indexable where appropriate. |
-| `https://sportsdata.api.geniussports.com/docs/...` and `https://statistics.api.geniussports.com/docs/...` | API documentation portals. citeturn4search15turn4search23 | High AEO value for technical buyers; also a risk if documentation pages outrank product narratives and don’t reinforce entity/product naming. |
+| Main Site | Primary marketing site positioning and product navigation (Perform / Engage / Bet / GeniusIQ / Data Capture / Sports Data API). citeturn14view0turn14view1 | Critical. This is where Genius should “own the definition” of its entity and products for answer engines. Current messaging is broad and multi-category (good for breadth, risky for entity crispness). citeturn14view0turn35view2 |
+| Investor Site | Investor relations, press releases, financial results (Q4 platform). citeturn4search5turn36view0 | Extremely high authority for “how does Genius make money / profitability / segments” queries; currently more extractable than the marketing newsroom for many announcements. citeturn32view1turn36view0 |
+| Developer Site | Developer center / reference docs for APIs. citeturn4search11 | High AEO value for “API / integration / docs” queries if it’s kept clean, canonical, and indexable where appropriate. |
+| APIs | API documentation portals. citeturn4search15turn4search23 | High AEO value for technical buyers; also a risk if documentation pages outrank product narratives and don’t reinforce entity/product naming. |
 | Numerous app/login subdomains (e.g., auth portals) | Customer/admin portals. citeturn4search4turn4search12 | Should generally be non-indexable. Indexation dilutes trust and can confuse LLM retrieval. |
 
 **Blunt finding:** there are signs of indexable non-marketing environments. For example, an “uat.arena.geniussports.com Managed WordPress Site” page (“Hello world!”) appears crawlable in search results. That is brand- and trust-negative in AI answers because low-quality indexed pages can be retrieved and summarized. citeturn9search0turn9search10
@@ -157,6 +157,7 @@ Genius has unusually strong **quantified performance claims** and **FAQ-based an
 ### Executive strategy summary
 
 **Where Genius stands now**
+
 Genius has strong AEO foundations on several product pages (BetVision, Data & Odds APIs, GTS, FANHub Media Buying) because those pages contain direct Q&A blocks and measurable claims. citeturn35view9turn35view7turn35view8turn26view2  
 But it underperforms on: entity clarity, marketing newsroom/case study extractability, and category/comparison coverage (where third parties define Genius and its competitors). citeturn14view0turn6search0turn32view0turn25view0
 
@@ -175,34 +176,44 @@ But it underperforms on: entity clarity, marketing newsroom/case study extractab
 
 These are ordered for **citation lift + narrative control**, not generic SEO.
 
-**Fix the extractability architecture for newsroom + case studies (highest impact).**  
+**Fix the extractability architecture for newsroom + case studies (highest impact).**
+
 If marketing newsroom pages remain thin while investor pages carry the real story, Genius will keep losing commercial narrative ownership. The NCAA example shows investor pages are richly extractable while marketing pages are not. citeturn32view0turn32view1  
 
-**Pick one canonical sportsbook hub and 301/canonicalize the other.**  
+**Pick one canonical sportsbook hub and 301/canonicalize the other.**
+
 Right now, `/bet/` and `/sportsbooks/` overlap heavily. Choose one (prefer `/bet/` since it’s already a product family in navigation) and canonicalize/redirect the other to prevent split authority. citeturn14view1turn33view1  
 
-**Publish a “Genius Sports is…” definition block on every top-level product hub.**  
+**Publish a “Genius Sports is…” definition block on every top-level product hub.**
+
 The best-performing pages already do this for BetVision and APIs; replicate the pattern for Engage, Perform, Data Capture, and the company homepage. citeturn35view9turn35view1turn33view4turn33view3  
 
-**Create a canonical “Official data rights & distribution” hub.**  
+**Create a canonical “Official data rights & distribution” hub.**
+
 Own queries like “official NFL betting data,” “official NCAA March Madness data,” “what does official mean,” “how licensing works,” “latency and verification.” Anchor it with citations and link out to NFL.com and NCAA releases. citeturn26view9turn32view1  
 
-**Create a canonical “Integrity Services” hub with governance transparency.**  
+**Create a canonical “Integrity Services” hub with governance transparency.**
+
 Perform has an integrity section, but it’s embedded. Build a standalone, citable integrity narrative: methods, monitoring approach, marketplace coverage, separation of duties, case examples. Use IBIA partnership and NCAA integrity safeguards as credibility anchors. citeturn35view6turn30search1turn32view1  
 
-**Standardize product naming across all mentions (FANHub, FANHub:ID, etc.).**  
+**Standardize product naming across all mentions (FANHub, FANHub:ID, etc.).**
+
 Pick one public-facing name and a clear module naming system; add “also known as” language once, then keep it consistent. citeturn33view2turn16view3turn26view2  
 
-**Build “comparison pages” that answer engines can cite.**  
+**Build “comparison pages” that answer engines can cite.**
+
 You do not need attack pages. You need neutral buyer guides: “How to choose a sports data provider,” “Genius vs Sportradar: what to compare,” “managed trading vs in-house,” “official vs unofficial data.” Third-party lists dominate because Genius doesn’t publish these in its own voice. citeturn6search0turn6search4turn35view7turn35view8  
 
-**Turn quantified claims into cite-safe claims.**  
+**Turn quantified claims into cite-safe claims.**
+
 You already publish powerful numbers (99% uptime; 22% margin increase). Add methodology notes (time period, definition, what’s excluded) so AI answers can reuse them without risking misrepresentation. citeturn16view1turn35view8  
 
-**Clean up indexable non-marketing environments.**  
+**Clean up indexable non-marketing environments.**
+
 UAT and stray “Hello world” pages should be removed or noindexed to prevent retrieval poisoning. citeturn9search0turn9search10  
 
-**Add “limitations / constraints” sections to high-risk pages.**  
+**Add “limitations / constraints” sections to high-risk pages.**
+
 For example: data rights are jurisdiction-dependent; integrity monitoring depends on access to regulated market data; identity solutions must be privacy compliant. This reduces overclaim risk and increases trust. citeturn35view3turn16view3turn6news50  
 
 ### Product-level AEO blueprints (ready to implement)
@@ -212,6 +223,7 @@ Each blueprint includes: canonical definition block, ideal structure, extractabl
 #### Sportsbooks / Betting blueprint (Bet: Data & Odds APIs, GTS, BetVision, MultiBet)
 
 **Canonical “What is it?” block to publish (copy-ready)**  
+
 Genius Sports’ **Bet** solutions are end-to-end sportsbook technologies that combine **official real-time sports data and low-latency odds**, **managed trading and risk tools**, and **interactive in-play streaming experiences** to improve uptime, betting engagement, and sportsbook profitability. citeturn14view1turn35view7turn35view9  
 
 **Ideal page structure (Bet hub)**
@@ -223,9 +235,11 @@ Genius Sports’ **Bet** solutions are end-to-end sportsbook technologies that c
 6) Buyer FAQ + implementation FAQ + risk FAQ + comparison FAQ (below)
 
 **Required extractable units to add**
+
 A “Sportsbook solution selector” matrix (In-house trading vs managed trading; data-only vs full stack; video-enabled vs not). A one-page integration timeline (“Week 1–2: technical discovery…”) and a compliance/rights table (“available leagues vary by jurisdiction/contract”).
 
 **Query fan-out set**
+
 Primary: “What sportsbook solutions does Genius Sports offer?”  
 Secondary buyer questions: “What are official data feeds?”; “How does low latency impact in-play betting?”; “What leagues are covered?”; “How does betbuilder work?”; “What is MultiBet?”; “How do you improve market uptime?”; “How do you price odds?”; “What sportsbooks use Genius?”; “How does BetVision increase engagement?”; “What’s included in managed trading?”  
 Implementation: “How do I integrate Data & Odds APIs?”; “What does onboarding to GTS look like?”; “What SDKs/webhooks are available?”; “How do you handle latency and failover?”; “How do you deploy BetVision in a sportsbook app?” citeturn35view7turn35view8turn35view9  
@@ -235,6 +249,7 @@ Comparisons: “Genius Sports vs Sportradar for official data”; “GTS vs in-h
 #### Advertising / Programmatic blueprint (FANHub, FANHub:ID, Dynamic Creative, Media Buying)
 
 **Canonical “What is it?” block to publish (copy-ready)**  
+
 **FANHub** is Genius Sports’ omni-channel sports advertising and activation platform that combines **sports-optimized media buying**, **fan audience activation/identity**, and **data-driven dynamic creative** so brands and sportsbooks can reach fans with the right message at the right moment. citeturn33view2turn35view0turn26view2  
 
 **Ideal page structure**
@@ -246,9 +261,11 @@ Comparisons: “Genius Sports vs Sportradar for official data”; “GTS vs in-h
 6) FAQ architecture (below)
 
 **Required extractable units to add**
+
 A “Data sources & activation” table (first-party league/team data, contextual signals, identity resolution signals) + “Supported channels” table (CTV, DOOH, display, social, audio), since the Media Buying page already references these but not in a scannable unit. citeturn26view2
 
 **Query fan-out set**  
+
 Primary: “What is FANHub?”  
 Secondary buyer questions: “How is sports programmatic different?”; “What inventory do you access?”; “What is FANHub:ID?”; “How do you target without third-party cookies?”; “How do you trigger ads by live sports moments?”; “What reporting do you provide?”; “Can you run managed service?”; “What sports/regions are supported?”; “How do you measure outcomes?”; “What’s your advantage vs generic DSPs?” citeturn26view2turn16view3  
 Implementation: “How do we onboard data?”; “How do we set up segments?”; “What integrations are required?”; “How do we QA dynamic creative templates?”; “How does iSpot measurement integration work?” citeturn36view0turn35view0  
@@ -258,6 +275,7 @@ Comparisons: “FANHub vs The Trade Desk for sports”; “FANHub:ID vs generic 
 #### Media & Broadcast blueprint (Augmentation, alt-casts, data-driven graphics)
 
 **Canonical “What is it?” block to publish (copy-ready)**  
+
 Genius Sports’ **broadcast augmentation** solutions use real-time official data and AI to generate **contextual graphics, insights, and interactive viewing modes** that help fans understand the game and create new sponsorship inventory during key moments. citeturn15view0turn26view9turn36view0  
 
 **Ideal page structure**
@@ -268,9 +286,11 @@ Genius Sports’ **broadcast augmentation** solutions use real-time official dat
 5) FAQ architecture
 
 **Required extractable units to add**
+
 An “Augmentation unit catalog” table (e.g., shot probability, win probability, player tracking overlays) and a “rights & data requirements” table (what data feed is needed for each).
 
 **Query fan-out set**
+
 Primary: “What is broadcast augmentation in live sports?”  
 Secondary buyer questions: “What data do you need?”; “What teams/leagues use it?”; “How does it create sponsorship inventory?”; “What is an alt-cast?”; “How does AI generate graphics in real time?”; “What latency is required?”; “Can it work for regional sports networks?”; “What’s the difference between tracking and event data?”; “How do you integrate with production workflows?”; “How do you measure impact?” citeturn26view9turn33view4turn14view5turn36view0  
 Implementation: “What integrations with broadcast graphics systems exist?”; “How do we QA data accuracy?”; “What’s the deployment timeline per venue?”; “What’s required for alternate telecasts?”; “How do you handle redundancy?”  
@@ -280,6 +300,7 @@ Comparisons: “Genius augmentation vs Second Spectrum vs in-house”; “Data-d
 #### Data & Integrity blueprint (monitoring, audits, education, integrity intelligence)
 
 **Canonical “What is it?” block to publish (copy-ready)**  
+
 Genius Sports **Integrity Services** help leagues and federations protect competitions from betting-related corruption by combining **24/7 bet monitoring**, **integrity education**, and **investigations/audit practices** designed to detect suspicious patterns and strengthen safeguards. citeturn35view6turn32view1turn30search1  
 
 **Ideal page structure**
@@ -291,9 +312,11 @@ Genius Sports **Integrity Services** help leagues and federations protect compet
 6) FAQ architecture
 
 **Required extractable units to add**
+
 A “What we monitor / what we don’t monitor” table; a “data sources & coverage” table; and a “responsible betting safeguards” checklist aligned to NCAA-style guardrails (limiting risky bet types, compliance expectations). citeturn32view1turn6news50
 
 **Query fan-out set**
+
 Primary: “What integrity services does Genius Sports provide?”  
 Secondary buyer questions: “What is bet monitoring?”; “How do you detect suspicious activity?”; “What leagues do you monitor?”; “Do you cover offshore markets?”; “What is integrity education?”; “How do audits work?”; “How do you protect athletes?”; “How do you share intelligence with sportsbooks?”; “What is your approach to responsible betting?”; “How do you avoid conflicts of interest?” citeturn35view6turn32view1turn6news50  
 Implementation: “How is monitoring configured for a league?”; “What reporting cadence do you provide?”; “How do you integrate with a league integrity unit?”; “What’s the escalation path?”; “How do you train participants?”  
@@ -303,6 +326,7 @@ Comparisons: “Genius vs Sportradar integrity monitoring”; “IBIA-based moni
 #### League/Federation solutions blueprint (Data Capture + league admin)
 
 **Canonical “What is it?” block to publish (copy-ready)**  
+
 Genius Sports’ **league technology** solutions help leagues and federations **capture official tracking and event data**, connect live scoreboard feeds, and digitize competition administration—turning each game into a reliable data ecosystem that supports performance, fan engagement, officiating, and commercial growth. citeturn33view3turn34view0turn26view1  
 
 **Ideal page structure**
@@ -314,9 +338,11 @@ Genius Sports’ **league technology** solutions help leagues and federations **
 6) FAQ architecture
 
 **Required extractable units to add**
+
 A “Venue deployment requirements” checklist; a “data types” table (tracking vs event vs video); and a “league maturity model” decision framework.
 
 **Query fan-out set**
+
 Primary: “What league technology does Genius Sports provide?”  
 Secondary buyer questions: “What is mesh tracking?”; “What tracking data do you capture?”; “How do you capture play-by-play?”; “What is a digital twin of gameplay?”; “How does scoreboard link-up work?”; “What tools digitize competition admin?”; “How do leagues monetize data?”; “How do you support officials?”; “What sports are supported?”; “How do you ensure data accuracy?” citeturn33view3turn14view5turn33view7  
 Implementation: “How long to install cameras?”; “What are camera/in-venue requirements?”; “How do we onboard statisticians?”; “How do we integrate feeds externally?”; “How do we train league staff?”  
@@ -326,11 +352,13 @@ Comparisons: “Optical tracking vs wearables”; “Automated vs manual eventin
 #### Performance blueprint (teams/leagues: Performance Studio, coaching insights)
 
 **Canonical “What is it?” block to publish (copy-ready)**  
+
 Genius Sports’ **performance solutions** combine tracking and event data with AI to deliver **deep video analysis, tactical insights, and decision support** for coaches and analysts—turning millions of in-game data points into actionable performance improvements. citeturn33view4turn14view6  
 
 **Extractable proof already present:** quantified tracking capture scale (“10,000 surface data points… 200 times a second”). citeturn33view4turn16view4  
 
 **Query fan-out set**
+
 Primary: “What performance analysis tools does Genius Sports offer?”  
 Secondary buyer questions: “What is Performance Studio?”; “How does AI video filtering work?”; “What sports are supported?”; “What metrics are available?”; “How is tracking paired to video?”; “How do analysts search video?”; “How does it integrate with coaching workflows?”; “What’s the data latency?”; “How does it compare to Hudl?”; “What’s included in league vs team packages?” citeturn34view0turn33view4  
 Implementation: “What video sources are required?”; “How do you tag and index plays?”; “What export formats exist?”; “How do you integrate with existing tools?”; “What training is required?”  
@@ -340,9 +368,11 @@ Comparisons: “Genius Performance Studio vs Hudl”; “Tracking-based analysis
 #### Streaming blueprint (BetVision + league streaming)
 
 **Canonical “What is it?” block to publish (copy-ready)**  
+
 Genius Sports enables **official low-latency sports streaming** in two primary contexts: (1) sportsbook experiences like **BetVision**, where streams are merged with betting interactivity; and (2) league/broadcast workflows where official audio-visual content can be produced, distributed, and commercialized. citeturn35view9turn35view4  
 
 **Query fan-out set**
+
 Primary: “Does Genius Sports provide live streaming?”  
 Secondary buyer questions: “What is BetVision streaming?”; “How low is the latency?”; “Which sports support streaming?”; “What rights are required?”; “Can streaming be integrated into sportsbook apps?”; “How do you monetize streaming?”; “What ad formats are supported?”; “How do you handle regional restrictions?”; “How do you ensure stream quality?”; “How does streaming connect to data?” citeturn35view9turn32view1turn35view0  
 Implementation: “What SDKs exist?”; “How do you authenticate users?”; “What’s the CDN/DRM model?”; “How do you handle concurrency?”; “How do you embed interactive overlays?”  
@@ -352,12 +382,15 @@ Comparisons: “BetVision vs standard sportsbook streaming”; “Low-latency vs
 #### Data rights blueprint (official data rights, licensing, marks)
 
 **Canonical “What is it?” block to publish (copy-ready)**  
+
 Genius Sports is an **official data distribution partner** for major sports organizations, providing licensed access to official league data feeds (and, in some programs, marks/logos) to regulated sportsbooks and media partners—under agreements that define what data can be used, where, and for which products. citeturn32view1turn26view9  
 
 **Required extractable units**
+
 A table of “official partnerships (representative)” with dates/terms where public; a “licensed uses” table (betting, media, coaching); and a plain-English “what official means” glossary.
 
 **Query fan-out set**
+
 Primary: “What does official sports data mean?”  
 Secondary buyer questions: “Who distributes official NFL data?”; “Who distributes official NCAA tournament data?”; “What is an Authorized Gaming Licensee program?”; “What are licensed sportsbooks allowed to do?”; “What is the difference between official and unofficial data?”; “Why does official data matter for in-play?”; “How do data rights affect latency?”; “How do marks/logos licensing works?”; “How do leagues monetize data?”; “What is the role of integrity safeguards?” citeturn26view9turn32view1turn36view0  
 Implementation: “How does a sportsbook license official data?”; “What compliance requirements apply?”; “How do you provision access?”; “How do you handle renewals?”; “How do you audit usage?”  
@@ -367,9 +400,11 @@ Comparisons: “Official distributor vs data aggregator”; “Exclusive vs non-
 ### Narrative control plan (off-site footprint that shapes AI answers)
 
 **Domains currently shaping the narrative**
+
 At minimum: Wikipedia for definitions, NFL.com for official data distribution, SEC/EDGAR for business model and risk framing, and major investor press distributions that get picked up widely. citeturn5search0turn26view9turn21view0turn36view0
 
 **What Genius should do**
+
 Use these levers:
 
 1) **Wikipedia alignment (high priority).**  
@@ -428,4 +463,5 @@ Minimum viable monitoring set:
 Dependencies: analytics instrumentation, search console + log-based monitoring, internal prompt tracking workflow.
 
 **Expected lift (directional)**
+
 If you fix the newsroom/case-study extractability and publish canonical rights/integrity hubs, you should see the fastest improvements on “what is,” “official data,” and “integrity” queries (because answer engines will finally have a clean on-domain source to cite instead of Wikipedia/third-party narratives). citeturn5search0turn26view9turn35view6
