@@ -93,6 +93,10 @@ export default function Page() {
   const [isCopyExpanded, setIsCopyExpanded] = useState(false);
   const [isEditorExpanded, setIsEditorExpanded] = useState(false);
 
+  // Collapsible "Advanced Options" inputs (region, style, content type, risk tier, keywords, etc.)
+  const [isDetailsExpanded, setIsDetailsExpanded] = useState(false);
+  const [isEditorDetailsExpanded, setIsEditorDetailsExpanded] = useState(false);
+
   // URL import — Analysis panel
   const [urlInput, setUrlInput] = useState("");
   const [isImporting, setIsImporting] = useState(false);
@@ -107,6 +111,7 @@ export default function Page() {
 
   const copyRef = useRef<HTMLTextAreaElement>(null);
   const editorInputRef = useRef<HTMLTextAreaElement>(null);
+  const editorRevisedCopyRef = useRef<HTMLTextAreaElement>(null);
 
   // Expand textareas to exact content height when expanded
   useLayoutEffect(() => {
@@ -130,6 +135,14 @@ export default function Page() {
       ta.style.height = "";
     }
   }, [isEditorExpanded, editorInput]);
+
+  // Auto-grow revised draft textarea so full streamed copy is visible without scrolling
+  useLayoutEffect(() => {
+    const ta = editorRevisedCopyRef.current;
+    if (!ta || !editorRevisedCopy) return;
+    ta.style.height = "auto";
+    ta.style.height = `${ta.scrollHeight}px`;
+  }, [editorRevisedCopy]);
 
   const groupedIssues = useMemo(() => {
     if (!analysis) return { voice: [], seo: [], aeo: [] } as const;
@@ -273,6 +286,7 @@ export default function Page() {
   const handleEditorRewrite = async () => {
     if (!editorInput.trim()) return;
     setEditorError("");
+    setEditorRevisedCopy("");
     setIsEditorRewriting(true);
 
     try {
@@ -394,6 +408,36 @@ export default function Page() {
 
   return (
     <>
+      {isAnalyzing ? (
+        <div
+          className="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="analysis-loading-title"
+          aria-busy="true"
+        >
+          <div className="modal-content-loading">
+            <span className="spinner-lg" aria-hidden />
+            <p id="analysis-loading-title">Analyzing copy…</p>
+            <p style={{ margin: 0, fontSize: "0.875rem", opacity: 0.75 }}>Generating Voice, SEO & AEO scores</p>
+          </div>
+        </div>
+      ) : null}
+      {isEditorRewriting && !editorRevisedCopy ? (
+        <div
+          className="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="rewrite-loading-title"
+          aria-busy="true"
+        >
+          <div className="modal-content-loading">
+            <span className="spinner-lg" aria-hidden />
+            <p id="rewrite-loading-title">Fixing issues…</p>
+            <p style={{ margin: 0, fontSize: "0.875rem", opacity: 0.75 }}>Revised draft will appear below as it’s ready</p>
+          </div>
+        </div>
+      ) : null}
       <section className="pt-0 pb-6 md:pb-8">
         <div className="container fade-in">
           <div className="flex items-center justify-between">
@@ -480,91 +524,101 @@ export default function Page() {
                 <div className="card fade-in">
                   <h3 className="mt-0">Inputs</h3>
 
-              <div className="form-group">
-                <label>Vertical</label>
-                <div className="flex flex-col gap-2">
-                  {(["Performance", "Bet", "Media"] as const).map((item) => (
+                  <div className="form-group">
                     <button
-                      key={item}
                       type="button"
-                      className={`button ${form.vertical === item ? "button-primary" : "button-outline"}`}
-                      onClick={() => updateForm("vertical", item)}
+                      className="button button-outline w-full flex items-center justify-between gap-2"
+                      onClick={() => setIsDetailsExpanded((v) => !v)}
+                      aria-expanded={isDetailsExpanded}
                     >
-                      {item}
+                      <span>Advanced Options</span>
+                      <span aria-hidden style={{ transition: "transform 0.2s", transform: isDetailsExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>
+                        ▼
+                      </span>
                     </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="regionStyle">Region style</label>
-                <select
-                  id="regionStyle"
-                  value={form.regionStyle}
-                  onChange={(e) => updateForm("regionStyle", e.target.value as FormState["regionStyle"])}
-                >
-                  <option>US</option>
-                  <option>UK</option>
-                  <option>Intl</option>
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="contentType">Content type</label>
-                <select
-                  id="contentType"
-                  value={form.contentType}
-                  onChange={(e) => updateForm("contentType", e.target.value as FormState["contentType"])}
-                >
-                  {["Social", "Blog", "SEO Pillar", "Email", "Landing Page", "PR", "Webinar", "Report", "One-pager"].map(
-                    (type) => (
-                      <option key={type}>{type}</option>
-                    )
-                  )}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="riskTier">Risk tier</label>
-                <select
-                  id="riskTier"
-                  value={form.riskTier}
-                  onChange={(e) => updateForm("riskTier", e.target.value as FormState["riskTier"])}
-                >
-                  <option>Low</option>
-                  <option>Medium</option>
-                  <option>High</option>
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="primaryKeyword">Primary keyword</label>
-                <input
-                  id="primaryKeyword"
-                  value={form.primaryKeyword}
-                  onChange={(e) => updateForm("primaryKeyword", e.target.value)}
-                  placeholder="e.g. sports fan engagement platform"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="secondaryKeywords">Secondary keywords (comma separated)</label>
-                <input
-                  id="secondaryKeywords"
-                  value={form.secondaryKeywords}
-                  onChange={(e) => updateForm("secondaryKeywords", e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="audience">Audience (role/title)</label>
-                <input id="audience" value={form.audience} onChange={(e) => updateForm("audience", e.target.value)} />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="cta">CTA</label>
-                <input id="cta" value={form.cta} onChange={(e) => updateForm("cta", e.target.value)} />
-              </div>
+                    {isDetailsExpanded ? (
+                      <div className="mt-3 space-y-3 border-t pt-3" style={{ borderColor: "var(--color-lightGrey)" }}>
+                        <div className="form-group mb-0">
+                          <label>Vertical</label>
+                          <div className="flex flex-col gap-2">
+                            {(["Performance", "Bet", "Media"] as const).map((item) => (
+                              <button
+                                key={item}
+                                type="button"
+                                className={`button ${form.vertical === item ? "button-primary" : "button-outline"}`}
+                                onClick={() => updateForm("vertical", item)}
+                              >
+                                {item}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="regionStyle">Region style</label>
+                          <select
+                            id="regionStyle"
+                            value={form.regionStyle}
+                            onChange={(e) => updateForm("regionStyle", e.target.value as FormState["regionStyle"])}
+                          >
+                            <option>US</option>
+                            <option>UK</option>
+                            <option>Intl</option>
+                          </select>
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="contentType">Content type</label>
+                          <select
+                            id="contentType"
+                            value={form.contentType}
+                            onChange={(e) => updateForm("contentType", e.target.value as FormState["contentType"])}
+                          >
+                            {["Social", "Blog", "SEO Pillar", "Email", "Landing Page", "PR", "Webinar", "Report", "One-pager"].map(
+                              (type) => (
+                                <option key={type}>{type}</option>
+                              )
+                            )}
+                          </select>
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="riskTier">Risk tier</label>
+                          <select
+                            id="riskTier"
+                            value={form.riskTier}
+                            onChange={(e) => updateForm("riskTier", e.target.value as FormState["riskTier"])}
+                          >
+                            <option>Low</option>
+                            <option>Medium</option>
+                            <option>High</option>
+                          </select>
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="primaryKeyword">Primary keyword</label>
+                          <input
+                            id="primaryKeyword"
+                            value={form.primaryKeyword}
+                            onChange={(e) => updateForm("primaryKeyword", e.target.value)}
+                            placeholder="e.g. sports fan engagement platform"
+                          />
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="secondaryKeywords">Secondary keywords (comma separated)</label>
+                          <input
+                            id="secondaryKeywords"
+                            value={form.secondaryKeywords}
+                            onChange={(e) => updateForm("secondaryKeywords", e.target.value)}
+                          />
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="audience">Audience (role/title)</label>
+                          <input id="audience" value={form.audience} onChange={(e) => updateForm("audience", e.target.value)} />
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="cta">CTA</label>
+                          <input id="cta" value={form.cta} onChange={(e) => updateForm("cta", e.target.value)} />
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
 
                   <div className="form-group">
                     <label htmlFor="analysisUpload">Upload copy file</label>
@@ -629,8 +683,13 @@ export default function Page() {
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    <button className="button button-primary" onClick={handleAnalyze} disabled={isAnalyzing || !form.copy.trim()}>
-                      {isAnalyzing ? "Analyzing..." : "Analyze"}
+                    <button
+                      className="button button-primary"
+                      onClick={handleAnalyze}
+                      disabled={isAnalyzing || !form.copy.trim()}
+                      aria-busy={isAnalyzing}
+                    >
+                      {isAnalyzing ? "Analyzing…" : "Analyze"}
                     </button>
                     <button className="button button-secondary" onClick={handleReset}>
                       Reset
@@ -807,6 +866,103 @@ export default function Page() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="card fade-in">
                   <h3 className="mt-0">Copy editor input</h3>
+
+                  <div className="form-group">
+                    <button
+                      type="button"
+                      className="button button-outline w-full flex items-center justify-between gap-2"
+                      onClick={() => setIsEditorDetailsExpanded((v) => !v)}
+                      aria-expanded={isEditorDetailsExpanded}
+                    >
+                      <span>Advanced Options</span>
+                      <span aria-hidden style={{ transition: "transform 0.2s", transform: isEditorDetailsExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>
+                        ▼
+                      </span>
+                    </button>
+                    {isEditorDetailsExpanded ? (
+                      <div className="mt-3 space-y-3 border-t pt-3" style={{ borderColor: "var(--color-lightGrey)" }}>
+                        <div className="form-group mb-0">
+                          <label>Vertical</label>
+                          <div className="flex flex-col gap-2">
+                            {(["Performance", "Bet", "Media"] as const).map((item) => (
+                              <button
+                                key={item}
+                                type="button"
+                                className={`button ${form.vertical === item ? "button-primary" : "button-outline"}`}
+                                onClick={() => updateForm("vertical", item)}
+                              >
+                                {item}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="editorRegionStyle">Region style</label>
+                          <select
+                            id="editorRegionStyle"
+                            value={form.regionStyle}
+                            onChange={(e) => updateForm("regionStyle", e.target.value as FormState["regionStyle"])}
+                          >
+                            <option>US</option>
+                            <option>UK</option>
+                            <option>Intl</option>
+                          </select>
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="editorContentType">Content type</label>
+                          <select
+                            id="editorContentType"
+                            value={form.contentType}
+                            onChange={(e) => updateForm("contentType", e.target.value as FormState["contentType"])}
+                          >
+                            {["Social", "Blog", "SEO Pillar", "Email", "Landing Page", "PR", "Webinar", "Report", "One-pager"].map(
+                              (type) => (
+                                <option key={type}>{type}</option>
+                              )
+                            )}
+                          </select>
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="editorRiskTier">Risk tier</label>
+                          <select
+                            id="editorRiskTier"
+                            value={form.riskTier}
+                            onChange={(e) => updateForm("riskTier", e.target.value as FormState["riskTier"])}
+                          >
+                            <option>Low</option>
+                            <option>Medium</option>
+                            <option>High</option>
+                          </select>
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="editorPrimaryKeyword">Primary keyword</label>
+                          <input
+                            id="editorPrimaryKeyword"
+                            value={form.primaryKeyword}
+                            onChange={(e) => updateForm("primaryKeyword", e.target.value)}
+                            placeholder="e.g. sports fan engagement platform"
+                          />
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="editorSecondaryKeywords">Secondary keywords (comma separated)</label>
+                          <input
+                            id="editorSecondaryKeywords"
+                            value={form.secondaryKeywords}
+                            onChange={(e) => updateForm("secondaryKeywords", e.target.value)}
+                          />
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="editorAudience">Audience (role/title)</label>
+                          <input id="editorAudience" value={form.audience} onChange={(e) => updateForm("audience", e.target.value)} />
+                        </div>
+                        <div className="form-group mb-0">
+                          <label htmlFor="editorCta">CTA</label>
+                          <input id="editorCta" value={form.cta} onChange={(e) => updateForm("cta", e.target.value)} />
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+
                   <div className="form-group">
                     <label htmlFor="editorUpload">Upload copy file</label>
                     <input id="editorUpload" type="file" accept=".txt,.md,.csv,text/plain,text/markdown" onChange={handleEditorUpload} />
@@ -873,8 +1029,9 @@ export default function Page() {
                       className="button button-primary"
                       onClick={handleEditorRewrite}
                       disabled={isEditorRewriting || !editorInput.trim()}
+                      aria-busy={isEditorRewriting}
                     >
-                      {isEditorRewriting ? "Rewriting..." : "Rewrite to fix issues"}
+                      {isEditorRewriting ? "Rewriting…" : "Rewrite to fix issues"}
                     </button>
                     <button
                       className="button button-secondary"
@@ -921,10 +1078,12 @@ export default function Page() {
                     <div className="form-group mt-4">
                       <label htmlFor="editorRevisedCopy">Revised draft</label>
                       <textarea
+                        ref={editorRevisedCopyRef}
                         id="editorRevisedCopy"
                         value={editorRevisedCopy}
                         onChange={(e) => setEditorRevisedCopy(e.target.value)}
-                        className="min-h-[320px]"
+                        className="min-h-[320px] overflow-hidden resize-none"
+                        rows={1}
                       />
                     </div>
                   ) : (
