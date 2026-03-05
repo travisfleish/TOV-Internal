@@ -7,33 +7,53 @@ export interface SectionConfig {
 
 export const SECTIONS: SectionConfig[] = [
   {
-    id: "shift",
-    title: "1. The shift: SEO → AEO",
-    tocLabel: "1. SEO → AEO",
+    id: "the-shift",
+    title: "1. The Shift: Rankings → Inclusion",
+    tocLabel: "1. The Shift",
   },
   {
     id: "how-it-works",
-    title: "2. How answer engines work",
-    tocLabel: "2. How it works",
+    title: "2. How Answer Engines Actually Work",
+    tocLabel: "2. How It Works",
   },
   {
-    id: "anatomy",
-    title: "3. The anatomy of AEO-ready content",
-    tocLabel: "3. AEO anatomy",
+    id: "three-gates",
+    title: "3. The Three Gates of Inclusion",
+    tocLabel: "3. The Three Gates",
   },
   {
-    id: "trust",
-    title: "4. Trust & defensibility",
-    tocLabel: "4. Trust & E-E-A-T",
+    id: "writing-for-extraction",
+    title: "4. Writing for Extraction",
+    tocLabel: "4. Writing for Extraction",
   },
   {
-    id: "mistakes",
-    title: "5. Mistakes that kill citations",
-    tocLabel: "5. Common mistakes",
+    id: "trust-defensibility",
+    title: "5. Trust & Defensibility",
+    tocLabel: "5. Trust & Defensibility",
   },
   {
-    id: "cheat-sheet",
-    title: "6. One-page cheat sheet",
-    tocLabel: "6. Cheat sheet",
+    id: "competitive-inclusion",
+    title: "6. Competitive Inclusion Strategy",
+    tocLabel: "6. Competitive Inclusion",
+  },
+  {
+    id: "topic-prompt-architecture",
+    title: "7. Topic & Prompt Architecture",
+    tocLabel: "7. Topic Architecture",
+  },
+  {
+    id: "optimize-vs-create",
+    title: "8. Optimize vs Create New",
+    tocLabel: "8. Optimize vs Create",
+  },
+  {
+    id: "operating-loop",
+    title: "9. The AEO Operating Loop",
+    tocLabel: "9. Operating Loop",
+  },
+  {
+    id: "publishing-standard",
+    title: "10. Genius Sports AEO Publishing Standard",
+    tocLabel: "10. Publishing Standard",
   },
 ];

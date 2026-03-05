@@ -14,7 +14,7 @@ import { CtaRow } from "./components/CtaRow";
 export const metadata: Metadata = {
   title: "AEO Guidebook — Genius Voice + Visibility QA",
   description:
-    "A practical guide to Answer Engine Optimization: how to write content that gets cited by AI-generated answers.",
+    "Engineering inclusion in AI answers: how Genius Sports content earns retrieval, extraction, and citation by answer engines.",
 };
 
 export default function AeoGuidebookPage() {
@@ -50,7 +50,20 @@ export default function AeoGuidebookPage() {
 
           {/* Intro */}
           <div style={{ paddingTop: "2rem", paddingBottom: "1.5rem", maxWidth: "52rem" }}>
-            <h1 className="mt-0 mb-4">AEO Guidebook</h1>
+            <h1 className="mt-0 mb-2">AEO Guidebook</h1>
+            <p
+              style={{
+                fontSize: "1rem",
+                fontWeight: 500,
+                letterSpacing: "-0.01em",
+                opacity: 0.55,
+                marginBottom: "var(--space-3)",
+                marginTop: 0,
+                textTransform: "uppercase",
+              }}
+            >
+              Engineering Inclusion in AI Answers
+            </p>
             <p
               style={{
                 fontSize: "1.125rem",
@@ -59,12 +72,23 @@ export default function AeoGuidebookPage() {
                 marginBottom: "var(--space-3)",
               }}
             >
-              Answer Engine Optimization (AEO) is the practice of writing
-              content that gets cited in AI-generated answers—not just ranked in
-              traditional search. As AI assistants, generative search, and
-              featured snippets synthesize responses from across the web, being
-              included requires writing that machines can extract cleanly and
-              attribute with confidence.
+              Answer Engine Optimization (AEO) is the practice of creating
+              content that AI systems retrieve, extract, and cite when generating
+              answers. Traditional SEO optimized for ranking in a list of links.
+              AEO optimizes for inclusion inside a synthesized response.
+            </p>
+            <p
+              style={{
+                fontSize: "1.125rem",
+                lineHeight: 1.6,
+                opacity: 0.85,
+                marginBottom: "var(--space-3)",
+              }}
+            >
+              In answer-driven environments, users often never click. The model
+              reads your content, extracts what it needs, and attributes the
+              clearest, most defensible sources. If the model cannot quote you
+              cleanly, you do not exist in the answer.
             </p>
             <p
               style={{
@@ -74,10 +98,7 @@ export default function AeoGuidebookPage() {
                 marginBottom: 0,
               }}
             >
-              For B2B brands, the stakes are high: a buyer asking an AI "which
-              platforms lead in attribution?" only sees the names the model can
-              support with evidence. The brands that get cited are the ones that
-              wrote to be quoted. This guidebook shows you how.
+              This guide defines how Genius Sports content earns inclusion.
             </p>
           </div>
         </div>
@@ -85,464 +106,641 @@ export default function AeoGuidebookPage() {
 
       {/* ── Two-column layout ── */}
       <GuidebookLayout sections={SECTIONS}>
-        {/* ── Section 1: The shift ── */}
-        <GuidebookSection id="shift" title="1. The shift: SEO → AEO">
+
+        {/* ── Section 1: The Shift ── */}
+        <GuidebookSection id="the-shift" title="1. The Shift: Rankings → Inclusion">
           <p>
-            Traditional SEO optimizes for ranking—getting your page near the
-            top of a results list so users click through. AEO optimizes for
-            citation—writing content that answer engines extract, paraphrase,
-            and attribute in a synthesized response. The goal isn&apos;t the
-            click; it&apos;s the answer.
+            The SEO model is a familiar funnel: Publish → Rank → Earn the
+            click → Convert. The AEO model is different in kind: Publish →
+            Get retrieved → Get extracted → Get included → Influence the
+            decision.
           </p>
           <p>
-            Modern answer engines don&apos;t serve a list of links. They read
-            across many sources and compose a response, citing the pages that
-            provided the clearest, most directly extractable information. Your
-            page may rank well in classic search but never appear in an
-            AI-generated answer if the content isn&apos;t structured for
-            extraction.
-          </p>
-          <p>
-            <strong>Answer-forward search</strong> means the user may never
-            visit your page at all. The engine reads it for them and quotes the
-            best passages. If your key claim is buried in paragraph four, buried
-            in a brand anecdote, or lives only inside a chart image, it
-            won&apos;t be quoted.
+            AEO success is binary. You are either inside the answer or you are
+            invisible. Incremental ranking improvements do not matter if you are
+            not selected as a source. A page that ranks third but is never
+            extracted contributes nothing to an AI-generated answer. A page
+            that ranks tenth but contains a clean, quotable passage can define
+            the model&apos;s response.
           </p>
 
           <Callout variant="warn">
             <p style={{ margin: 0 }}>
-              "If a model can&apos;t quote you cleanly, you don&apos;t exist in
-              the answer."
+              AEO success is binary. You are either inside the answer or you
+              are invisible. Incremental ranking improvements do not matter if
+              you are not selected as a source.
             </p>
           </Callout>
 
           <CtaRow />
         </GuidebookSection>
 
-        {/* ── Section 2: How it works ── */}
-        <GuidebookSection id="how-it-works" title="2. How answer engines work">
+        {/* ── Section 2: How Answer Engines Actually Work ── */}
+        <GuidebookSection id="how-it-works" title="2. How Answer Engines Actually Work">
           <p>
-            Answer engines don&apos;t work like a search index lookup. They run
-            a multi-stage pipeline that determines which content gets extracted
-            and which gets passed over.
+            Modern answer engines operate in a multi-stage pipeline. Each stage
+            is a gate — and your content must clear all of them to earn
+            citation.
           </p>
 
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Retrieval
-          </h3>
+          <h3 style={{ marginTop: "var(--space-5)" }}>A. Query Fan-Out</h3>
           <p>
-            The engine fetches candidate documents—pages it deems relevant to
-            the query based on existing indices, crawl data, and freshness
-            signals.
+            The model rewrites a human prompt into multiple clean search
+            queries. A single question may fan out into five or ten distinct
+            retrieval requests, each targeting a different facet of the
+            original intent.
           </p>
 
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Relevance checks
-          </h3>
+          <h3 style={{ marginTop: "var(--space-5)" }}>B. Retrieval</h3>
           <p>
-            Each document is scored for topical match, authority signals, and
-            structural clarity. Thin pages, duplicate content, or poorly
-            organized text score lower.
+            The engine fetches candidate documents from its index based on the
+            fan-out queries. Pages must be accessible, indexed, and not
+            blocked by crawl restrictions to enter the candidate pool.
           </p>
 
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Passage extraction
-          </h3>
+          <h3 style={{ marginTop: "var(--space-5)" }}>C. Selection</h3>
           <p>
-            The engine identifies short, self-contained passages that directly
-            address the query—usually 1–3 sentences that can stand alone
-            without surrounding context.
+            From the candidate pool, the engine chooses which pages to actually
+            open and read — based on URL, title, snippet, authority signals,
+            and freshness. This is the &ldquo;cover&rdquo; stage: pages must
+            look like the answer before they are opened.
           </p>
 
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Synthesis
-          </h3>
+          <h3 style={{ marginTop: "var(--space-5)" }}>D. Passage Extraction</h3>
           <p>
-            Extracted passages are combined into a coherent answer. The model
-            may paraphrase but prefers language it can quote with confidence.
+            Once opened, the engine pulls short, self-contained passages that
+            directly answer the query. These are typically 1–3 sentences that
+            can stand alone without surrounding context. If your content
+            requires setup before it makes sense, it will not be extracted.
           </p>
 
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Citations
-          </h3>
+          <h3 style={{ marginTop: "var(--space-5)" }}>E. Synthesis</h3>
           <p>
-            Sources are attributed. Pages whose extracted passages contributed
-            meaningfully get cited; pages that were retrieved but didn&apos;t
-            produce clean passages often don&apos;t.
+            Extracted passages from multiple sources are combined into a
+            structured response. The model may paraphrase, but it prefers
+            language it can quote with confidence.
           </p>
 
-          <Checklist
-            title="What this means for writers"
-            items={[
-              "Short, precise answers win over comprehensive ones — extractable precision beats coverage breadth",
-              "The first paragraph of each section matters most — that's where passages are pulled from",
-              "Never rely on images, charts, or tables to carry key facts — restate them in text",
-              "Define terms and acronyms where they first appear — don't assume shared context",
-              "Each paragraph should answer a specific question, not just introduce a topic",
-              "Consistent language across your site builds entity confidence in the model",
-            ]}
-          />
+          <h3 style={{ marginTop: "var(--space-5)" }}>F. Citation</h3>
+          <p>
+            Pages that contributed extractable content are cited. Pages that
+            were retrieved but did not yield clean passages are not.
+          </p>
+
+          <Callout variant="warn">
+            <strong style={{ display: "block", marginBottom: "0.25rem" }}>
+              Core Rule
+            </strong>
+            <p style={{ margin: 0 }}>
+              The model can only answer from what it fetched into context. Not
+              what exists on your site. Not what it scanned. Only what it
+              actually retrieved and could extract cleanly.
+            </p>
+          </Callout>
 
           <CtaRow />
         </GuidebookSection>
 
-        {/* ── Section 3: Anatomy ── */}
-        <GuidebookSection
-          id="anatomy"
-          title="3. The anatomy of AEO-ready content"
-        >
+        {/* ── Section 3: The Three Gates of Inclusion ── */}
+        <GuidebookSection id="three-gates" title="3. The Three Gates of Inclusion">
           <p>
-            AEO-ready content is built around four structural mechanics. Each
-            one increases the probability that your content gets extracted and
-            cited.
+            Every AEO failure reduces to one of three gates. A page that clears
+            all three earns citation. A page that fails any one of them is
+            invisible, regardless of how strong the rest of the content is.
           </p>
 
-          {/* Answer-first blocks */}
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Answer-first blocks
-          </h3>
+          <Callout variant="info">
+            <strong style={{ display: "block", marginBottom: "0.25rem" }}>
+              The Three Gates
+            </strong>
+            <p style={{ margin: 0 }}>
+              Gate 1: <strong>Fetchable</strong> — Can the engine access and
+              ingest the page?<br />
+              Gate 2: <strong>Chosen</strong> — Does your page look like the
+              answer before it is opened?<br />
+              Gate 3: <strong>Extractable</strong> — Once opened, can the model
+              lift a clean, quotable passage?
+            </p>
+          </Callout>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>Gate 1: Fetchable</h3>
+          <p>Can the engine access and ingest the page?</p>
+          <Checklist
+            items={[
+              "Indexed by major search engines",
+              "Not blocked by robots.txt",
+              "Not gated behind authentication",
+              "Not dependent on heavy JavaScript rendering",
+              "Not locked behind paywalls",
+            ]}
+          />
+          <p>If content cannot be crawled, it cannot be cited.</p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>Gate 2: Chosen</h3>
           <p>
-            Lead every section with the direct answer to the question it
-            addresses. Don&apos;t warm up with context, brand narrative, or
-            qualifications—get to the substance within the first ~120 words.
-            Answer engines prioritize passages near the top of sections, so
-            burying the lede costs you citations.
+            Does your page look like the answer before it is opened? Answer
+            engines choose based on URL, title, snippet, and freshness signals.
+            This is your &ldquo;cover.&rdquo; Pages that signal utility and
+            direct relevance get opened. Pages that signal brand storytelling
+            or vague positioning get skipped.
+          </p>
+          <p>Selection is intent-matching, not branding.</p>
+
+          <DoDont
+            dontText="We're Transforming the Future of Sports Data"
+            doText="How Real-Time Sports Data Feeds In-Play Betting Models"
+            dontLabel="Weak signal"
+            doLabel="Strong signal"
+          />
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>Gate 3: Extractable</h3>
+          <p>
+            Once opened, can the model lift a clean, quotable passage?
+            Extraction fails when:
+          </p>
+          <ul>
+            <li>The answer appears after long introductions</li>
+            <li>Key claims live only in images or charts</li>
+            <li>Content relies on surrounding context to be meaningful</li>
+            <li>Paragraphs are vague or promotional</li>
+            <li>The page tries to serve multiple conflicting purposes</li>
+          </ul>
+          <p>Winning content is answer-first, self-contained, dense, structured, and explicit.</p>
+
+          <Callout variant="warn">
+            <p style={{ margin: 0 }}>
+              If it cannot be quoted cleanly in 1–3 sentences, it will not be
+              cited.
+            </p>
+          </Callout>
+
+          <CtaRow />
+        </GuidebookSection>
+
+        {/* ── Section 4: Writing for Extraction ── */}
+        <GuidebookSection id="writing-for-extraction" title="4. Writing for Extraction">
+          <p>
+            Extraction is mechanical. Structure determines success. The
+            following four mechanics raise extraction probability across every
+            piece of content you publish.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>A. Lead With the Answer</h3>
+          <p>
+            Every section should open with a direct, explicit answer within the
+            first ~120 words. Do not warm up with brand narrative. The first
+            paragraph carries the highest extraction probability — answer
+            engines prioritize passages near the top of sections.
           </p>
 
           <DoDont
-            dontText="At Acme, we've spent years developing our approach to attribution. Our team of experts has refined our methodology through countless client engagements, and today we're excited to share how our platform handles multi-touch attribution."
-            doText="Acme's multi-touch attribution model distributes credit across all touchpoints in a conversion path using a time-decay weighting algorithm. The model weights recent interactions more heavily and supports lookback windows from 7 to 90 days."
-            dontLabel="Long intro first"
+            dontText="At Genius Sports, we've spent years building advanced tracking systems that have evolved through partnerships with the world's leading leagues and federations."
+            doText="Genius Sports' optical tracking system captures 3D player positioning at 25 frames per second, enabling sub-second in-play analytics for sportsbooks and broadcasters."
+            dontLabel="Brand narrative first"
             doLabel="Direct answer first"
           />
 
-          {/* Self-contained paragraphs */}
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Self-contained paragraphs
-          </h3>
+          <h3 style={{ marginTop: "var(--space-5)" }}>B. Write Self-Contained Paragraphs</h3>
           <p>
-            Each paragraph should work as a standalone excerpt. Include the
-            entity (what you&apos;re describing), the predicate (what&apos;s
-            true about it), and any necessary conditions. Don&apos;t rely on
-            context from surrounding paragraphs to make a sentence meaningful.
+            Each paragraph must function independently. A model may extract a
+            single paragraph without any surrounding context, so every
+            paragraph needs to include: the entity (what you&apos;re
+            describing), the claim (what&apos;s true about it), and any
+            relevant conditions or scope.
           </p>
           <p>
-            Spell out acronyms on first use: "Answer Engine Optimization (AEO)."
-            Use consistent entity names throughout—don&apos;t call it "the
-            platform" in one paragraph and "our solution" in another. Ambiguity
-            lowers model confidence.
-          </p>
-
-          {/* Extractable units */}
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Extractable units
-          </h3>
-          <p>
-            Write in formats that extraction algorithms prefer: definitions,
-            numbered steps, comparison tables, and FAQ blocks. These are modular
-            by design—each item is self-contained and quotable independently of
-            the surrounding text.
+            Avoid orphan pronouns and vague references. Define acronyms on
+            first use: &ldquo;Gross Gaming Revenue (GGR).&rdquo; Use the
+            entity&apos;s full name consistently — don&apos;t call it
+            &ldquo;the platform&rdquo; in one paragraph and &ldquo;our
+            solution&rdquo; in another. Consistency builds entity confidence.
           </p>
 
-          <ExampleBlock
-            beforeLabel="Fluffy step list"
-            afterLabel="Extractable step list"
-            before={`Our onboarding process is designed around your success. We start with a discovery call where we get to know your goals, then move into the setup phase where our team helps configure the system. From there, we work with you to import your data and get everything connected. Finally, you're ready to run.`}
-            after={`Onboarding takes three steps:\n1. Discovery call (30 min): Map your attribution goals, data sources, and team structure.\n2. Platform setup (1–3 days): Acme's team configures your workspace, integrations, and user permissions.\n3. Data import: Connect your ad platforms, CRM, and analytics tools. Most clients are live within 5 business days.`}
-            note="The 'After' version is modular: each step is independently quotable, time-bounded, and entity-clear."
-          />
-
-          {/* Fan-out coverage */}
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Fan-out coverage
-          </h3>
+          <h3 style={{ marginTop: "var(--space-5)" }}>C. Use Extractable Formats</h3>
           <p>
-            After answering the primary question, anticipate the follow-up
-            questions a buyer would naturally ask. Each logical next question is
-            an opportunity for an additional citation—and covering them prevents
-            competitors from owning those answers.
+            Extraction algorithms prefer structured formats. Write in forms
+            that are modular by design — each item is self-contained and
+            quotable independently.
           </p>
-          <p>
-            FAQ sections are especially effective for fan-out coverage because
-            each Q&amp;A pair is structurally extractable. Here&apos;s an
-            example from an attribution platform:
-          </p>
-
-          <div
-            style={{
-              border: "1px solid var(--color-lightGrey)",
-              borderRadius: "var(--radius-md)",
-              overflow: "hidden",
-              marginBottom: "var(--space-4)",
-            }}
-          >
-            {[
-              {
-                q: "What is multi-touch attribution?",
-                a: "Multi-touch attribution assigns credit for a conversion to multiple touchpoints in a customer's journey rather than to a single interaction. It helps marketers understand which channels and campaigns contribute to outcomes across the full funnel.",
-              },
-              {
-                q: "How does Acme's attribution model differ from last-click?",
-                a: "Last-click attribution assigns 100% of conversion credit to the final touchpoint before conversion. Acme distributes credit across all touches using configurable weighting—time-decay by default—giving a more accurate picture of how each channel contributes.",
-              },
-              {
-                q: "Does Acme support cross-device attribution?",
-                a: "Yes. Acme links touchpoints across devices using deterministic identity matching (logged-in user data) and probabilistic modeling (device fingerprinting). Cross-device attribution is available on Standard and Enterprise plans.",
-              },
-              {
-                q: "What lookback window does Acme use?",
-                a: "The default lookback window is 30 days. Customers can configure windows from 7 to 90 days at the campaign level depending on their typical sales cycle.",
-              },
-              {
-                q: "Can I use Acme alongside my existing analytics tools?",
-                a: "Acme integrates with Google Analytics, Adobe Analytics, and most major CRMs and ad platforms. Attribution data can be exported via API or synced to your data warehouse on a configurable schedule.",
-              },
-            ].map(({ q, a }, i) => (
-              <div
-                key={i}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div
+              style={{
+                background: "#f0fdf4",
+                border: "1px solid #bbf7d0",
+                padding: "1rem 1.25rem",
+                borderRadius: "var(--radius-md)",
+              }}
+            >
+              <strong
                 style={{
-                  padding: "1rem 1.25rem",
-                  borderBottom:
-                    i < 4 ? "1px solid var(--color-lightGrey)" : undefined,
+                  display: "block",
+                  color: "#15803d",
+                  marginBottom: "0.5rem",
+                  fontSize: "0.875rem",
                 }}
               >
-                <p
-                  style={{ margin: "0 0 0.4rem", fontWeight: 500 }}
-                >
-                  Q: {q}
-                </p>
-                <p style={{ margin: 0, opacity: 0.85, lineHeight: 1.6 }}>
-                  A: {a}
-                </p>
-              </div>
-            ))}
+                ✓ Prefer
+              </strong>
+              <ul style={{ margin: 0, paddingLeft: "1.25rem", fontSize: "0.9375rem", lineHeight: 1.55 }}>
+                <li>Definitions</li>
+                <li>Numbered steps</li>
+                <li>Comparison tables (in text)</li>
+                <li>FAQ blocks</li>
+                <li>Clear pros/cons</li>
+                <li>Constraint-based breakdowns</li>
+              </ul>
+            </div>
+            <div
+              style={{
+                background: "#fff1f2",
+                border: "1px solid #fecdd3",
+                padding: "1rem 1.25rem",
+                borderRadius: "var(--radius-md)",
+              }}
+            >
+              <strong
+                style={{
+                  display: "block",
+                  color: "#be123c",
+                  marginBottom: "0.5rem",
+                  fontSize: "0.875rem",
+                }}
+              >
+                ✗ Avoid
+              </strong>
+              <ul style={{ margin: 0, paddingLeft: "1.25rem", fontSize: "0.9375rem", lineHeight: 1.55 }}>
+                <li>Narrative sprawl</li>
+                <li>Dense walls of text</li>
+                <li>Visual-only comparison tables</li>
+              </ul>
+            </div>
           </div>
+          <p>
+            If a chart contains a critical fact, restate it in text nearby.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>D. Build Fan-Out Coverage</h3>
+          <p>
+            After answering the main question, anticipate the next 3–5 logical
+            follow-ups a reader would naturally ask. Each follow-up is an
+            additional citation opportunity. A page that answers only its
+            headline question misses every downstream query.
+          </p>
+          <p>
+            FAQ blocks are highly extractable because each Q&amp;A pair is
+            modular and self-contained. They also map directly onto the
+            query fan-out stage: each question in an FAQ mirrors one of the
+            sub-queries the engine generates from a broader prompt.
+          </p>
 
           <CtaRow />
         </GuidebookSection>
 
-        {/* ── Section 4: Trust & defensibility ── */}
-        <GuidebookSection id="trust" title="4. Trust & defensibility">
+        {/* ── Section 5: Trust & Defensibility ── */}
+        <GuidebookSection id="trust-defensibility" title="5. Trust & Defensibility">
           <p>
-            E-E-A-T stands for <strong>Experience, Expertise,
-            Authoritativeness, and Trustworthiness</strong>. It originated in
-            Google&apos;s Search Quality Rater Guidelines as a framework for
-            human evaluators to assess content quality, and has since been
-            adopted—explicitly or implicitly—by the ranking and synthesis logic
-            of most major answer engines. Models weight content more heavily
-            when it demonstrates credible, first-hand knowledge, consistent
-            positioning, and claims that can be independently verified.
+            Answer engines weight content more heavily when it demonstrates
+            expertise and credible constraints. Trustworthiness is not a soft
+            signal — it directly affects extraction probability.
           </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>A. Qualify Claims</h3>
           <p>
-            For AEO, E-E-A-T is less about structured markup and more about
-            writing behaviour: how you qualify claims, what evidence you anchor
-            them to, and whether your content sounds like it was written by
-            someone who actually knows the subject. Three of the four dimensions
-            map directly onto copy structure and are covered below.
+            Avoid unsupported superlatives. A claim a model cannot evaluate
+            for plausibility is a claim it will not cite.
+          </p>
+
+          <DoDont
+            dontText="Industry-leading real-time data."
+            doText="Real-time data delivered with sub-second latency for in-play betting markets, under standard sportsbook load conditions."
+            dontLabel="Weak — unsupported"
+            doLabel="Strong — scoped and specific"
+          />
+
+          <p>Add qualification by including:</p>
+          <ul>
+            <li>
+              <strong>Scope:</strong> &ldquo;for Tier 1 sportsbooks&rdquo;
+            </li>
+            <li>
+              <strong>Time bounds:</strong> &ldquo;as of Q1 2025&rdquo;
+            </li>
+            <li>
+              <strong>Conditions:</strong> &ldquo;under UKGC compliance
+              requirements&rdquo;
+            </li>
+            <li>
+              <strong>Evidence:</strong> &ldquo;based on 2024 client
+              performance benchmarks&rdquo;
+            </li>
+          </ul>
+          <p>Specificity increases citability.</p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>B. Anchor Claims in Verifiable Signals</h3>
+          <p>
+            A single precise data point strengthens extraction more than
+            multiple vague claims. Use concrete metrics, named partnerships,
+            defined thresholds, and cited research. Avoid stacking unrelated
+            statistics in one paragraph — it dilutes the extractability of
+            each one.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>C. State Limitations</h3>
+          <p>
+            Trustworthiness increases when boundaries are acknowledged.
+            Acknowledging scope boundaries signals intellectual honesty, and
+            models are increasingly able to detect overclaiming.
           </p>
 
           <Callout variant="info">
             <p style={{ margin: 0 }}>
-              <strong>Why Experience isn&apos;t a sub-section here.</strong>{" "}
-              In consumer and editorial publishing, the &ldquo;Experience&rdquo;
-              dimension is demonstrated through first-hand narrative—a doctor
-              writing from clinical practice, a mechanic from the garage floor.
-              In B2B brand content, Experience signals work differently: they
-              live in proof points rather than prose structure—customer case
-              studies, proprietary benchmark data, named authors with verifiable
-              credentials, and third-party validation. Those are content
-              strategy and programme decisions, not copy-writing patterns. This
-              guide focuses on structural writing mechanics that apply to every
-              piece you publish; Experience-layer signals (case studies, data
-              reports, author bios) deserve their own programme guidance and are
-              outside this scope.
+              <strong>Example of a trust-building limitation:</strong>{" "}
+              &ldquo;This solution performs best in high-volume, structured
+              event data environments.&rdquo; Content that reads as
+              unqualified marketing copy is discounted.
             </p>
           </Callout>
 
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Qualify claims with scope and conditions{" "}
-            <span style={{ fontWeight: 400, opacity: 0.55, fontSize: "0.9rem" }}>
-              — Authoritativeness
-            </span>
-          </h3>
+          <h3 style={{ marginTop: "var(--space-5)" }}>D. Maintain Cross-Site Consistency</h3>
           <p>
-            Don&apos;t write "the fastest platform." Write "the fastest platform
-            for real-time in-play betting markets, processing up to 50,000
-            events per second." The first version is an unsupported superlative.
-            The second is a claim a model can extract, evaluate for plausibility,
-            and cite with confidence.
+            If one page claims &ldquo;real-time&rdquo; and another says
+            &ldquo;15-minute refresh,&rdquo; models detect the inconsistency.
+            Inconsistencies compound globally — a contradiction on one page
+            can reduce confidence in claims across the entire site.
           </p>
-
-          <p>Good qualification patterns:</p>
+          <p>Audit claims across:</p>
           <ul>
-            <li>
-              <strong>Scope:</strong> "for mid-market B2B SaaS companies with
-              100–1,000 seat deployments"
-            </li>
-            <li>
-              <strong>Conditions:</strong> "under standard US regulatory
-              requirements"
-            </li>
-            <li>
-              <strong>Time-bounded:</strong> "as of Q1 2025"
-            </li>
-            <li>
-              <strong>Evidence-cited:</strong> "per our 2024 State of
-              Attribution report"
-            </li>
+            <li>Product pages</li>
+            <li>FAQs</li>
+            <li>Docs</li>
+            <li>Case studies</li>
+            <li>Press releases</li>
           </ul>
-
-          <DoDont
-            dontText="Acme is the industry-leading attribution platform trusted by the world's top brands."
-            doText="Acme is the attribution platform of record for 8 of the top 20 global sports betting operators by GGR volume, as of 2024."
-            dontLabel="Unsupported superlative"
-            doLabel="Scoped, evidence-anchored claim"
-          />
-
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Add evidence without turning it into a research paper{" "}
-            <span style={{ fontWeight: 400, opacity: 0.55, fontSize: "0.9rem" }}>
-              — Expertise
-            </span>
-          </h3>
-          <p>
-            A single well-placed data point is worth more than three paragraphs
-            of analysis. Use evidence to anchor claims, not to make every
-            paragraph feel academic. Link to source material when you cite
-            external data—this builds trust with both readers and models.
-          </p>
-          <p>
-            Aim for one specific, verifiable fact per major claim. Avoid
-            stacking multiple statistics in a single paragraph; it dilutes the
-            extractability of each one.
-          </p>
-
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            State limitations without undermining positioning{" "}
-            <span style={{ fontWeight: 400, opacity: 0.55, fontSize: "0.9rem" }}>
-              — Trustworthiness
-            </span>
-          </h3>
-          <p>
-            Acknowledging scope boundaries increases credibility with answer
-            engines. "Acme works best for teams with structured, high-volume
-            event data; if you&apos;re early-stage with limited touchpoints,
-            lighter tools may suffice" is more trustworthy—and more
-            quotable—than an everything-is-possible pitch.
-          </p>
-          <p>
-            Limitations signal intellectual honesty. Models are increasingly
-            able to detect overclaiming, and content that reads as promotional
-            without substance tends to be underweighted.
-          </p>
 
           <Callout variant="warn">
             <p style={{ margin: 0 }}>
-              Answer engines are trained to recognize and discount overclaiming.
-              Superlatives without evidence don&apos;t just fail to get
-              cited—they can reduce confidence in the surrounding claims on the
-              same page.
+              Answer engines cross-reference your site against third-party
+              mentions, review platforms, and partner pages. Contradictions
+              between owned and earned content reduce model confidence in all
+              your claims.
             </p>
           </Callout>
+
+          <CtaRow />
+        </GuidebookSection>
+
+        {/* ── Section 6: Competitive Inclusion Strategy ── */}
+        <GuidebookSection id="competitive-inclusion" title="6. Competitive Inclusion Strategy">
+          <p>
+            Extraction alone does not guarantee inclusion. Inclusion is
+            competitive. Being well-structured is necessary but not sufficient
+            — you also need to understand the ecosystem you are competing in.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>A. Visibility vs Rank</h3>
+          <p>
+            <strong>Visibility</strong> is how often your brand appears in AI
+            answers. <strong>Rank</strong> is your position relative to
+            competitors in those answers. Visibility can rise for everyone
+            simultaneously — a growing topic means more answers mentioning
+            more brands. Rank determines whether you are winning.
+          </p>
+          <p>Always measure inclusion relative to competitors, not in isolation.</p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>B. The Citation Supply Chain</h3>
+          <p>
+            Answer engines repeatedly cite the same types of sources per
+            topic. Some topics favor institutional sites (regulatory bodies,
+            Wikipedia), publisher listicles, industry research, company blogs,
+            or community platforms. The mix varies by topic and platform.
+          </p>
+          <p>
+            Understanding the supply chain determines strategy. If publishers
+            dominate a topic, earned media may be required. If company blogs
+            dominate, owned content can compete directly. AEO is not only
+            writing — it is supply chain positioning.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>C. Platform Divergence</h3>
+          <p>
+            Different AI platforms rely on different citation ecosystems. One
+            platform may heavily cite YouTube transcripts and community
+            discussions. Another may prioritize institutional domains and
+            corporate research pages. Performance variance across platforms is
+            diagnostic, not random — it tells you which content types and
+            distribution channels matter for each platform.
+          </p>
+
+          <CtaRow />
+        </GuidebookSection>
+
+        {/* ── Section 7: Topic & Prompt Architecture ── */}
+        <GuidebookSection id="topic-prompt-architecture" title="7. Topic & Prompt Architecture">
+          <p>
+            Winning broadly requires structure. Not every piece of content
+            serves the same citation purpose. Mapping your content to topic
+            types prevents gaps and avoids duplication.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>A. Coverage Topics</h3>
+          <p>
+            Broad category presence. Example: &ldquo;Sports data
+            providers.&rdquo; Goal: ensure visibility in the category
+            conversation. These topics are high-volume and competitive — owned
+            content must be exceptionally well-structured to compete.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>B. Depth Topics</h3>
+          <p>
+            Highly specific, compound prompts. Example: &ldquo;Real-time sports
+            data provider for regulated European sportsbooks.&rdquo;
+            Specificity forces selectivity and creates opportunity. Fewer
+            sources compete for these queries, and the extraction bar is lower
+            because less content exists. Depth builds authority.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>C. Commercial Framing</h3>
+          <p>
+            To earn recommendation inclusion, target prompts that require
+            evaluation. These are the queries where buyers are actively
+            choosing:
+          </p>
+          <ul>
+            <li>Best X</li>
+            <li>Top providers of X</li>
+            <li>Alternatives to [competitor]</li>
+            <li>X vs Y</li>
+            <li>Platforms for [specific constraint]</li>
+          </ul>
 
           <Callout variant="info">
             <p style={{ margin: 0 }}>
-              <strong>Consistency across sources matters.</strong> Answer engines
-              cross-reference your site against third-party mentions, review
-              platforms, and partner pages. If your homepage says "real-time
-              data" but your docs say "refreshes every 15 minutes," models
-              register the inconsistency. Audit your claims across all owned and
-              earned content.
+              Avoid seeding measurement prompts with your brand name. Prompts
+              like &ldquo;What does Genius Sports offer?&rdquo; measure brand
+              recall, not competitive inclusion. Use category and commercial
+              prompts to accurately measure how you appear in real buyer
+              queries.
             </p>
           </Callout>
 
           <CtaRow />
         </GuidebookSection>
 
-        {/* ── Section 5: Mistakes ── */}
-        <GuidebookSection id="mistakes" title="5. Mistakes that kill citations">
+        {/* ── Section 8: Optimize vs Create New ── */}
+        <GuidebookSection id="optimize-vs-create" title="8. Optimize vs Create New">
           <p>
-            Most AEO failures aren&apos;t about keywords or metadata. They&apos;re
-            structural writing problems that make content impossible to extract
-            cleanly. Here are the most common ones.
+            Not every inclusion gap requires new content. Before creating
+            net-new pages, diagnose why existing content is failing.
           </p>
 
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Burying the answer
-          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div
+              style={{
+                background: "#eff6ff",
+                border: "1px solid var(--color-blue)",
+                padding: "1rem 1.25rem",
+                borderRadius: "var(--radius-md)",
+              }}
+            >
+              <strong
+                style={{
+                  display: "block",
+                  color: "var(--color-blue)",
+                  marginBottom: "0.75rem",
+                  fontSize: "0.875rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                Optimize Existing Pages When
+              </strong>
+              <ul style={{ margin: 0, paddingLeft: "1.25rem", fontSize: "0.9375rem", lineHeight: 1.65 }}>
+                <li>The topic matches the winning prompt</li>
+                <li>
+                  The issue is structure, clarity, or extractability — not
+                  topic fit
+                </li>
+                <li>The page suffers from mixed identity</li>
+              </ul>
+            </div>
+            <div
+              style={{
+                background: "#fff7ed",
+                border: "1px solid var(--color-orange)",
+                padding: "1rem 1.25rem",
+                borderRadius: "var(--radius-md)",
+              }}
+            >
+              <strong
+                style={{
+                  display: "block",
+                  color: "var(--color-orange)",
+                  marginBottom: "0.75rem",
+                  fontSize: "0.875rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                Create Net New When
+              </strong>
+              <ul style={{ margin: 0, paddingLeft: "1.25rem", fontSize: "0.9375rem", lineHeight: 1.65 }}>
+                <li>Your page is too broad for the winning query</li>
+                <li>Competitors own a more specific angle</li>
+                <li>The supply chain rewards a different format</li>
+              </ul>
+            </div>
+          </div>
+
+          <p>Specificity wins over breadth.</p>
+
+          <CtaRow />
+        </GuidebookSection>
+
+        {/* ── Section 9: The AEO Operating Loop ── */}
+        <GuidebookSection id="operating-loop" title="9. The AEO Operating Loop">
           <p>
-            The key claim appears in paragraph four after two paragraphs of
-            setup and brand narrative. By the time you get to the point, the
-            extraction pass has moved on. Lead every section with the answer.
+            AEO is continuous. A single audit or content sprint is not a
+            programme. The supply chain shifts, competitors improve, and
+            platforms update their citation logic. The operating loop keeps
+            you moving.
           </p>
 
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Vague superlatives
-          </h3>
-          <p>
-            "Industry-leading," "best-in-class," "world-class," "cutting-edge."
-            These are noise. Models can&apos;t evaluate them and don&apos;t
-            cite them. Specificity beats superlatives every time.
-          </p>
+          {[
+            {
+              step: "Setup",
+              description:
+                "Define priority topics and competitors. Establish your baseline inclusion rate across target queries.",
+            },
+            {
+              step: "Analyze",
+              description:
+                "Identify inclusion gaps and supply chain shifts. Which topics are you missing from? Which competitors are winning them?",
+            },
+            {
+              step: "Generate",
+              description:
+                "Ship targeted improvements — optimize existing pages or create net new content for the specific gap identified.",
+            },
+            {
+              step: "Engineer",
+              description:
+                "Systematize monitoring and iteration. Build repeatable processes for tracking inclusion and triggering content reviews.",
+            },
+          ].map(({ step, description }, i, arr) => (
+            <div
+              key={step}
+              style={{
+                display: "flex",
+                gap: "1rem",
+                padding: "1rem 0",
+                borderBottom:
+                  i < arr.length - 1
+                    ? "1px solid var(--color-lightGrey)"
+                    : undefined,
+                alignItems: "flex-start",
+              }}
+            >
+              <div
+                style={{
+                  flexShrink: 0,
+                  width: "2rem",
+                  height: "2rem",
+                  borderRadius: "50%",
+                  background: "var(--color-navy)",
+                  color: "var(--color-white)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: 600,
+                  fontSize: "0.875rem",
+                }}
+              >
+                {i + 1}
+              </div>
+              <div>
+                <strong style={{ display: "block", marginBottom: "0.25rem" }}>
+                  {step}
+                </strong>
+                <p style={{ margin: 0, opacity: 0.8, lineHeight: 1.6 }}>
+                  {description}
+                </p>
+              </div>
+            </div>
+          ))}
 
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Topic sprawl
-          </h3>
-          <p>
-            A page that lightly covers ten adjacent topics may rank well via
-            traditional SEO but is too diffuse for extraction. Each page should
-            answer one primary question with depth, not skim ten questions with
-            breadth.
-          </p>
-
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Comparisons only in images
-          </h3>
-          <p>
-            Competitive tables, diagrams, and infographic summaries that live
-            exclusively in image files are invisible to answer engines. Any fact
-            worth claiming should appear in text, even if it also appears in a
-            visual.
-          </p>
-
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Undefined acronyms
-          </h3>
-          <p>
-            SEM, MTA, LTV, GGR, DSP—if your content assumes the reader knows
-            your industry shorthand, the model may be uncertain enough to skip
-            the citation. Define on first use, every time.
-          </p>
-
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Contradictory claims across pages
-          </h3>
-          <p>
-            Your product page says "real-time data." Your FAQ says "data
-            refreshes every 15 minutes." Your docs say "near-real-time." Models
-            register these inconsistencies and lower confidence in your claims
-            across the whole site.
-          </p>
-
-          <h3 style={{ marginTop: "var(--space-5)" }}>
-            Freshness theater
-          </h3>
-          <p>
-            "Last updated March 2025" in a footer doesn&apos;t help if the
-            content itself hasn&apos;t changed. Models increasingly evaluate
-            whether updates actually changed substantive content, not just the
-            timestamp. Update the date only when the content changes.
+          <p style={{ marginTop: "var(--space-4)" }}>
+            One topic. One improvement. Every cycle.
           </p>
 
           <CtaRow />
         </GuidebookSection>
 
-        {/* ── Section 6: Cheat sheet ── */}
-        <GuidebookSection id="cheat-sheet" title="6. One-page cheat sheet">
+        {/* ── Section 10: Publishing Standard ── */}
+        <GuidebookSection id="publishing-standard" title="10. Genius Sports AEO Publishing Standard">
           <p>
-            Use this as a final checklist before publishing any piece of content
-            you want cited by answer engines.
+            Before publishing any content intended for AI inclusion, confirm
+            each item below. This is the minimum standard for content to be
+            considered AEO-ready.
           </p>
 
           <div
@@ -562,49 +760,58 @@ export default function AeoGuidebookPage() {
                 letterSpacing: "-0.01em",
               }}
             >
-              AEO Readiness Checklist
+              Genius Sports AEO Publishing Standard
             </div>
             <div style={{ padding: "1.25rem" }}>
               {[
                 {
                   category: "Direct answer early",
                   check:
-                    "The answer to the section's primary question appears within the first ~120 words.",
+                    "The direct answer appears within the first ~120 words.",
                 },
                 {
                   category: "Entity clarity",
                   check:
-                    "Every key claim names the entity explicitly — no orphan pronouns or vague references to 'the solution.'",
+                    "All key entities are explicitly named — no orphan pronouns or vague references.",
                 },
                 {
-                  category: "Extractable units",
+                  category: "Extractable format",
                   check:
-                    "At least one section uses a format optimized for extraction: numbered steps, definition, comparison table, or FAQ.",
-                },
-                {
-                  category: "Fan-out questions",
-                  check:
-                    "You've covered the top 3–5 follow-up questions a buyer would naturally ask after reading this page.",
-                },
-                {
-                  category: "Evidence + constraints",
-                  check:
-                    "Every major claim includes a scope qualifier, a data point, or a stated condition — no bare superlatives.",
+                    "At least one extractable format is used (definition, numbered steps, FAQ, comparison table).",
                 },
                 {
                   category: "Text-first for key facts",
                   check:
-                    "Key facts that appear in charts, tables, or images are also stated in plain text nearby.",
+                    "Key facts appear in text — not only in visuals, charts, or images.",
+                },
+                {
+                  category: "Evidence + scope",
+                  check:
+                    "Major claims include scope or evidence. No bare superlatives.",
+                },
+                {
+                  category: "No unsupported superlatives",
+                  check:
+                    "Superlatives are replaced with specifics (metrics, conditions, named scope).",
                 },
                 {
                   category: "Acronyms defined",
-                  check:
-                    "All industry acronyms are spelled out on first use within this page.",
+                  check: "All acronyms are defined on first use.",
                 },
                 {
                   category: "Consistent across site",
                   check:
-                    "Claims here don't contradict what's written on related pages, docs, or third-party listings.",
+                    "Claims do not contradict other owned content (product pages, docs, FAQs, case studies).",
+                },
+                {
+                  category: "Fan-out coverage",
+                  check:
+                    "The piece answers the primary question and logical follow-up questions.",
+                },
+                {
+                  category: "Single identity",
+                  check:
+                    "The page has a single, clear identity and purpose — not multiple competing intents.",
                 },
               ].map(({ category, check }, i, arr) => (
                 <div
@@ -646,15 +853,20 @@ export default function AeoGuidebookPage() {
           </div>
 
           <Callout variant="tip">
+            <strong style={{ display: "block", marginBottom: "0.25rem" }}>
+              Final Principle
+            </strong>
             <p style={{ margin: 0 }}>
-              Run your draft through the Analyzer before publishing. The AEO
-              score flags the most common extraction blockers—undefined acronyms,
-              buried answers, and superlatives without evidence.
+              We are no longer competing for attention in a list of links. We
+              are competing to be the sentence the model uses. Structure
+              determines extraction. Specificity determines credibility.
+              Positioning determines inclusion. That is AEO at Genius Sports.
             </p>
           </Callout>
 
           <CtaRow label="Run your copy through the Analyzer" />
         </GuidebookSection>
+
       </GuidebookLayout>
     </>
   );
