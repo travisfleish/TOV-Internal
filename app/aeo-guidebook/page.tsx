@@ -111,9 +111,11 @@ export default function AeoGuidebookPage() {
         <GuidebookSection id="the-shift" title="1. The Shift: Rankings → Inclusion">
           <p>
             The SEO model is a familiar funnel: Publish → Rank → Earn the
-            click → Convert. The AEO model is different in kind: Publish →
-            Get retrieved → Get extracted → Get included → Influence the
-            decision.
+            click → Convert.
+            <br />
+            <br />
+            The AEO model is different in kind: Publish → Get retrieved →
+            Get extracted → Get included → Influence the decision.
           </p>
           <p>
             AEO success is binary. You are either inside the answer or you are
