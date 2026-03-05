@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import type { Analysis, RedlineSegment, Span } from "@/lib/schema";
 
@@ -112,6 +112,7 @@ export default function Page() {
   const copyRef = useRef<HTMLTextAreaElement>(null);
   const editorInputRef = useRef<HTMLTextAreaElement>(null);
   const editorRevisedCopyRef = useRef<HTMLTextAreaElement>(null);
+  const revisedCopySectionRef = useRef<HTMLDivElement>(null);
 
   // Expand textareas to exact content height when expanded
   useLayoutEffect(() => {
@@ -143,6 +144,16 @@ export default function Page() {
     ta.style.height = "auto";
     ta.style.height = `${ta.scrollHeight}px`;
   }, [editorRevisedCopy]);
+
+  // Scroll revised copy section into view when rewrite completes so it's always visible
+  const wasRewritingRef = useRef(false);
+  useEffect(() => {
+    const wasRewriting = wasRewritingRef.current;
+    wasRewritingRef.current = isEditorRewriting;
+    if (wasRewriting && !isEditorRewriting && editorRevisedCopy && revisedCopySectionRef.current) {
+      revisedCopySectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [editorRevisedCopy, isEditorRewriting]);
 
   const groupedIssues = useMemo(() => {
     if (!analysis) return { voice: [], seo: [], aeo: [] } as const;
@@ -1049,7 +1060,7 @@ export default function Page() {
                   </div>
                 </div>
 
-                <div className="card fade-in">
+                <div ref={revisedCopySectionRef} className="card fade-in">
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <h3 className="mt-0 mb-0">Revised copy</h3>
                     <div className="flex items-center gap-2">
