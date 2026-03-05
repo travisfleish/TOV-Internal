@@ -469,15 +469,16 @@ label {
   font-size: 0.9375rem;
 }
 
-/* Bordered section: each logical row (main + detail blocks) wrapped for readability */
+/* Bordered section: each logical row (main + detail blocks) in one cohesive table */
 .blueprint-markdown .blueprint-section {
   border: 2px solid #000;
-  border-radius: var(--radius-md);
+  border-radius: 0;
   overflow: hidden;
-  margin-bottom: 1rem;
-}
-.blueprint-markdown .blueprint-section:last-child {
   margin-bottom: 0;
+}
+.blueprint-markdown .blueprint-section:not(:first-child) {
+  border-top-width: 4px;
+  margin-top: -2px;
 }
 .blueprint-markdown .blueprint-section-main {
   margin: 0;

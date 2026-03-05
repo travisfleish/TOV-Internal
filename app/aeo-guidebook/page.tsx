@@ -86,7 +86,7 @@ export default function AeoGuidebookPage() {
       {/* ── Two-column layout ── */}
       <GuidebookLayout sections={SECTIONS}>
         {/* ── Section 1: The shift ── */}
-        <GuidebookSection id="shift" title="The shift: SEO → AEO">
+        <GuidebookSection id="shift" title="1. The shift: SEO → AEO">
           <p>
             Traditional SEO optimizes for ranking—getting your page near the
             top of a results list so users click through. AEO optimizes for
@@ -121,41 +121,56 @@ export default function AeoGuidebookPage() {
         </GuidebookSection>
 
         {/* ── Section 2: How it works ── */}
-        <GuidebookSection id="how-it-works" title="How answer engines work">
+        <GuidebookSection id="how-it-works" title="2. How answer engines work">
           <p>
             Answer engines don&apos;t work like a search index lookup. They run
             a multi-stage pipeline that determines which content gets extracted
             and which gets passed over.
           </p>
 
-          <ol style={{ paddingLeft: "1.625rem", marginBottom: "var(--space-4)" }}>
-            <li style={{ marginBottom: "0.75rem" }}>
-              <strong>Retrieval.</strong> The engine fetches candidate
-              documents—pages it deems relevant to the query based on existing
-              indices, crawl data, and freshness signals.
-            </li>
-            <li style={{ marginBottom: "0.75rem" }}>
-              <strong>Relevance checks.</strong> Each document is scored for
-              topical match, authority signals, and structural clarity. Thin
-              pages, duplicate content, or poorly organized text score lower.
-            </li>
-            <li style={{ marginBottom: "0.75rem" }}>
-              <strong>Passage extraction.</strong> The engine identifies short,
-              self-contained passages that directly address the query—usually
-              1–3 sentences that can stand alone without surrounding context.
-            </li>
-            <li style={{ marginBottom: "0.75rem" }}>
-              <strong>Synthesis.</strong> Extracted passages are combined into a
-              coherent answer. The model may paraphrase but prefers language it
-              can quote with confidence.
-            </li>
-            <li>
-              <strong>Citations.</strong> Sources are attributed. Pages whose
-              extracted passages contributed meaningfully get cited; pages that
-              were retrieved but didn&apos;t produce clean passages often
-              don&apos;t.
-            </li>
-          </ol>
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Retrieval
+          </h3>
+          <p>
+            The engine fetches candidate documents—pages it deems relevant to
+            the query based on existing indices, crawl data, and freshness
+            signals.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Relevance checks
+          </h3>
+          <p>
+            Each document is scored for topical match, authority signals, and
+            structural clarity. Thin pages, duplicate content, or poorly
+            organized text score lower.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Passage extraction
+          </h3>
+          <p>
+            The engine identifies short, self-contained passages that directly
+            address the query—usually 1–3 sentences that can stand alone
+            without surrounding context.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Synthesis
+          </h3>
+          <p>
+            Extracted passages are combined into a coherent answer. The model
+            may paraphrase but prefers language it can quote with confidence.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Citations
+          </h3>
+          <p>
+            Sources are attributed. Pages whose extracted passages contributed
+            meaningfully get cited; pages that were retrieved but didn&apos;t
+            produce clean passages often don&apos;t.
+          </p>
 
           <Checklist
             title="What this means for writers"
@@ -175,7 +190,7 @@ export default function AeoGuidebookPage() {
         {/* ── Section 3: Anatomy ── */}
         <GuidebookSection
           id="anatomy"
-          title="The anatomy of AEO-ready content"
+          title="3. The anatomy of AEO-ready content"
         >
           <p>
             AEO-ready content is built around four structural mechanics. Each
@@ -183,9 +198,9 @@ export default function AeoGuidebookPage() {
             cited.
           </p>
 
-          {/* 3.1 Answer-first blocks */}
+          {/* Answer-first blocks */}
           <h3 style={{ marginTop: "var(--space-5)" }}>
-            3.1 Answer-first blocks
+            Answer-first blocks
           </h3>
           <p>
             Lead every section with the direct answer to the question it
@@ -202,9 +217,9 @@ export default function AeoGuidebookPage() {
             doLabel="Direct answer first"
           />
 
-          {/* 3.2 Self-contained paragraphs */}
+          {/* Self-contained paragraphs */}
           <h3 style={{ marginTop: "var(--space-5)" }}>
-            3.2 Self-contained paragraphs
+            Self-contained paragraphs
           </h3>
           <p>
             Each paragraph should work as a standalone excerpt. Include the
@@ -219,9 +234,9 @@ export default function AeoGuidebookPage() {
             lowers model confidence.
           </p>
 
-          {/* 3.3 Extractable units */}
+          {/* Extractable units */}
           <h3 style={{ marginTop: "var(--space-5)" }}>
-            3.3 Extractable units
+            Extractable units
           </h3>
           <p>
             Write in formats that extraction algorithms prefer: definitions,
@@ -238,9 +253,9 @@ export default function AeoGuidebookPage() {
             note="The 'After' version is modular: each step is independently quotable, time-bounded, and entity-clear."
           />
 
-          {/* 3.4 Fan-out coverage */}
+          {/* Fan-out coverage */}
           <h3 style={{ marginTop: "var(--space-5)" }}>
-            3.4 Fan-out coverage
+            Fan-out coverage
           </h3>
           <p>
             After answering the primary question, anticipate the follow-up
@@ -308,7 +323,7 @@ export default function AeoGuidebookPage() {
         </GuidebookSection>
 
         {/* ── Section 4: Trust & defensibility ── */}
-        <GuidebookSection id="trust" title="Trust & defensibility">
+        <GuidebookSection id="trust" title="4. Trust & defensibility">
           <p>
             E-E-A-T stands for <strong>Experience, Expertise,
             Authoritativeness, and Trustworthiness</strong>. It originated in
@@ -446,65 +461,85 @@ export default function AeoGuidebookPage() {
         </GuidebookSection>
 
         {/* ── Section 5: Mistakes ── */}
-        <GuidebookSection id="mistakes" title="Mistakes that kill citations">
+        <GuidebookSection id="mistakes" title="5. Mistakes that kill citations">
           <p>
             Most AEO failures aren&apos;t about keywords or metadata. They&apos;re
             structural writing problems that make content impossible to extract
             cleanly. Here are the most common ones.
           </p>
 
-          <ol style={{ paddingLeft: "1.625rem" }}>
-            <li style={{ marginBottom: "1rem" }}>
-              <strong>Burying the answer.</strong> The key claim appears in
-              paragraph four after two paragraphs of setup and brand narrative.
-              By the time you get to the point, the extraction pass has moved
-              on. Lead every section with the answer.
-            </li>
-            <li style={{ marginBottom: "1rem" }}>
-              <strong>Vague superlatives.</strong> "Industry-leading,"
-              "best-in-class," "world-class," "cutting-edge." These are noise.
-              Models can&apos;t evaluate them and don&apos;t cite them.
-              Specificity beats superlatives every time.
-            </li>
-            <li style={{ marginBottom: "1rem" }}>
-              <strong>Topic sprawl.</strong> A page that lightly covers ten
-              adjacent topics may rank well via traditional SEO but is too
-              diffuse for extraction. Each page should answer one primary
-              question with depth, not skim ten questions with breadth.
-            </li>
-            <li style={{ marginBottom: "1rem" }}>
-              <strong>Comparisons only in images.</strong> Competitive tables,
-              diagrams, and infographic summaries that live exclusively in image
-              files are invisible to answer engines. Any fact worth claiming
-              should appear in text, even if it also appears in a visual.
-            </li>
-            <li style={{ marginBottom: "1rem" }}>
-              <strong>Undefined acronyms.</strong> SEM, MTA, LTV, GGR, DSP—if
-              your content assumes the reader knows your industry shorthand, the
-              model may be uncertain enough to skip the citation. Define on
-              first use, every time.
-            </li>
-            <li style={{ marginBottom: "1rem" }}>
-              <strong>Contradictory claims across pages.</strong> Your product
-              page says "real-time data." Your FAQ says "data refreshes every 15
-              minutes." Your docs say "near-real-time." Models register these
-              inconsistencies and lower confidence in your claims across the
-              whole site.
-            </li>
-            <li>
-              <strong>Freshness theater.</strong> "Last updated March 2025" in a
-              footer doesn&apos;t help if the content itself hasn&apos;t
-              changed. Models increasingly evaluate whether updates actually
-              changed substantive content, not just the timestamp. Update the
-              date only when the content changes.
-            </li>
-          </ol>
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Burying the answer
+          </h3>
+          <p>
+            The key claim appears in paragraph four after two paragraphs of
+            setup and brand narrative. By the time you get to the point, the
+            extraction pass has moved on. Lead every section with the answer.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Vague superlatives
+          </h3>
+          <p>
+            "Industry-leading," "best-in-class," "world-class," "cutting-edge."
+            These are noise. Models can&apos;t evaluate them and don&apos;t
+            cite them. Specificity beats superlatives every time.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Topic sprawl
+          </h3>
+          <p>
+            A page that lightly covers ten adjacent topics may rank well via
+            traditional SEO but is too diffuse for extraction. Each page should
+            answer one primary question with depth, not skim ten questions with
+            breadth.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Comparisons only in images
+          </h3>
+          <p>
+            Competitive tables, diagrams, and infographic summaries that live
+            exclusively in image files are invisible to answer engines. Any fact
+            worth claiming should appear in text, even if it also appears in a
+            visual.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Undefined acronyms
+          </h3>
+          <p>
+            SEM, MTA, LTV, GGR, DSP—if your content assumes the reader knows
+            your industry shorthand, the model may be uncertain enough to skip
+            the citation. Define on first use, every time.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Contradictory claims across pages
+          </h3>
+          <p>
+            Your product page says "real-time data." Your FAQ says "data
+            refreshes every 15 minutes." Your docs say "near-real-time." Models
+            register these inconsistencies and lower confidence in your claims
+            across the whole site.
+          </p>
+
+          <h3 style={{ marginTop: "var(--space-5)" }}>
+            Freshness theater
+          </h3>
+          <p>
+            "Last updated March 2025" in a footer doesn&apos;t help if the
+            content itself hasn&apos;t changed. Models increasingly evaluate
+            whether updates actually changed substantive content, not just the
+            timestamp. Update the date only when the content changes.
+          </p>
 
           <CtaRow />
         </GuidebookSection>
 
         {/* ── Section 6: Cheat sheet ── */}
-        <GuidebookSection id="cheat-sheet" title="One-page cheat sheet">
+        <GuidebookSection id="cheat-sheet" title="6. One-page cheat sheet">
           <p>
             Use this as a final checklist before publishing any piece of content
             you want cited by answer engines.

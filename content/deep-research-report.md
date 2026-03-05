@@ -104,19 +104,19 @@ Concrete inconsistencies and confusion vectors:
 
 Scoring scale: 1 (poor) to 5 (excellent). “Citation likelihood” reflects how easily an answer engine can quote or paraphrase a passage while preserving accuracy and confidence.
 
-| Page | URL (real) | Extractability | Clarity | Trust | Entity precision | Citation likelihood | What’s working / what’s missing |
-|---|---|---:|---:|---:|---:|---:|---|
-| Homepage | `https://www.geniussports.com/` | 2 | 3 | 3 | 2 | 3 | Strong breadth (“performance / fan activation / betting”), but not a clean, single definitional answer for “what is Genius Sports.” citeturn14view0turn35view2 |
-| Bet hub | `https://www.geniussports.com/bet/` | 4 | 4 | 4 | 4 | 4 | Clear product list and outcomes; good stats and structure. citeturn14view1turn33view0 |
-| BetVision | `https://www.geniussports.com/bet/bet-vision/` | 5 | 5 | 4 | 4 | 5 | Best-in-class “What is BetVision?” block and concrete capability list. citeturn35view9 |
-| Data & Odds APIs | `https://www.geniussports.com/bet/odds-feeds-api/` | 5 | 4 | 4 | 4 | 5 | FAQ-style definitional answer engines can lift; includes quantified uptime claim. citeturn16view1turn35view7 |
-| Genius Trading Services | `https://www.geniussports.com/bet/genius-trading-services/` | 5 | 4 | 4 | 4 | 5 | Strong “What is GTS?” + quantified Edge impact. Needs sourcing/method context for the 22% claim. citeturn35view8 |
-| Engage hub | `https://www.geniussports.com/engage/` | 4 | 4 | 3 | 3 | 4 | Clear audience framing and product buckets. “World’s first sport-focused media activation platform” is strong but needs proof/citations and precise module naming. citeturn15view0turn35view1 |
-| FANHub hub | `https://www.geniussports.com/engage/fanhub/` | 4 | 4 | 3 | 3 | 4 | Solid definition and capability list; missing explicit “what data sources / what inventory types / what measurement integrations” table. citeturn33view2turn35view0 |
-| FANHub Media Buying | `https://www.geniussports.com/engage/fanhub/media-buying/` | 5 | 4 | 4 | 3 | 5 | Excellent “question → answer” explanation of sports programmatic and moment-triggered ads; add integrations list and compliance table to raise trust. citeturn26view2turn33view6 |
-| Data Capture | `https://www.geniussports.com/data-capture/` | 4 | 4 | 4 | 4 | 4 | Clear system definition (“computer vision system,” “digital twin”), plus concrete adoption scale claims. Needs a standardized “what is mesh tracking” definition block. citeturn33view3turn14view5 |
-| Perform | `https://www.geniussports.com/perform/` | 4 | 3 | 4 | 3 | 4 | Strong quantified “surface data points / times a second” and an Integrity section exists. Needs cleaner separation of sub-products (Performance Studio, SAOT, league admin, integrity) into individually citable modules. citeturn33view4turn34view0 |
-| GeniusIQ | `https://www.geniussports.com/geniusiq/` | 4 | 4 | 3 | 4 | 4 | Very clear “GeniusIQ is…” definition; good platform framing. Needs concrete examples and an “inputs → outputs” unit to improve trust/citability. citeturn33view5turn26view5 |
+| Page | Extractability | Clarity | Trust | Entity precision | Citation likelihood | What’s working / what’s missing |
+|---|---:|---:|---:|---:|---:|---|
+| Homepage | 2 | 3 | 3 | 2 | 3 | Strong breadth (“performance / fan activation / betting”), but not a clean, single definitional answer for “what is Genius Sports.” citeturn14view0turn35view2 |
+| Bet hub | 4 | 4 | 4 | 4 | 4 | Clear product list and outcomes; good stats and structure. citeturn14view1turn33view0 |
+| BetVision | 5 | 5 | 4 | 4 | 5 | Best-in-class “What is BetVision?” block and concrete capability list. citeturn35view9 |
+| Data & Odds APIs | 5 | 4 | 4 | 4 | 5 | FAQ-style definitional answer engines can lift; includes quantified uptime claim. citeturn16view1turn35view7 |
+| Genius Trading Services | 5 | 4 | 4 | 4 | 5 | Strong “What is GTS?” + quantified Edge impact. Needs sourcing/method context for the 22% claim. citeturn35view8 |
+| Engage hub | 4 | 4 | 3 | 3 | 4 | Clear audience framing and product buckets. “World’s first sport-focused media activation platform” is strong but needs proof/citations and precise module naming. citeturn15view0turn35view1 |
+| FANHub hub | 4 | 4 | 3 | 3 | 4 | Solid definition and capability list; missing explicit “what data sources / what inventory types / what measurement integrations” table. citeturn33view2turn35view0 |
+| FANHub Media Buying | 5 | 4 | 4 | 3 | 5 | Excellent “question → answer” explanation of sports programmatic and moment-triggered ads; add integrations list and compliance table to raise trust. citeturn26view2turn33view6 |
+| Data Capture | 4 | 4 | 4 | 4 | 4 | Clear system definition (“computer vision system,” “digital twin”), plus concrete adoption scale claims. Needs a standardized “what is mesh tracking” definition block. citeturn33view3turn14view5 |
+| Perform | 4 | 3 | 4 | 3 | 4 | Strong quantified “surface data points / times a second” and an Integrity section exists. Needs cleaner separation of sub-products (Performance Studio, SAOT, league admin, integrity) into individually citable modules. citeturn33view4turn34view0 |
+| GeniusIQ | 4 | 4 | 3 | 4 | 4 | Very clear “GeniusIQ is…” definition; good platform framing. Needs concrete examples and an “inputs → outputs” unit to improve trust/citability. citeturn33view5turn26view5 |
 
 ### High-impact structural issue: investor pages are more “extractable” than marketing newsroom/case studies
 

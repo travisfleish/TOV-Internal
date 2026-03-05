@@ -8,32 +8,32 @@ export interface SectionConfig {
 export const SECTIONS: SectionConfig[] = [
   {
     id: "shift",
-    title: "The shift: SEO → AEO",
-    tocLabel: "SEO → AEO",
+    title: "1. The shift: SEO → AEO",
+    tocLabel: "1. SEO → AEO",
   },
   {
     id: "how-it-works",
-    title: "How answer engines work",
-    tocLabel: "How it works",
+    title: "2. How answer engines work",
+    tocLabel: "2. How it works",
   },
   {
     id: "anatomy",
-    title: "The anatomy of AEO-ready content",
-    tocLabel: "AEO anatomy",
+    title: "3. The anatomy of AEO-ready content",
+    tocLabel: "3. AEO anatomy",
   },
   {
     id: "trust",
-    title: "Trust & defensibility",
-    tocLabel: "Trust & E-E-A-T",
+    title: "4. Trust & defensibility",
+    tocLabel: "4. Trust & E-E-A-T",
   },
   {
     id: "mistakes",
-    title: "Mistakes that kill citations",
-    tocLabel: "Common mistakes",
+    title: "5. Mistakes that kill citations",
+    tocLabel: "5. Common mistakes",
   },
   {
     id: "cheat-sheet",
-    title: "One-page cheat sheet",
-    tocLabel: "Cheat sheet",
+    title: "6. One-page cheat sheet",
+    tocLabel: "6. Cheat sheet",
   },
 ];

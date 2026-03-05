@@ -114,9 +114,11 @@ function buildRenderer(): Renderer {
       const mainWidths =
         MAIN_COLS === 3
           ? ["25%", "35%", "40%"]
-          : MAIN_COLS === 7
-            ? ["10%", "16%", "15%", "15%", "15%", "15%", "14%"]
-            : Array(MAIN_COLS).fill(`${Math.round(100 / MAIN_COLS)}%`);
+          : isScorecard && MAIN_COLS === 6
+            ? ["24%", "14%", "14%", "14%", "14%", "20%"]
+            : MAIN_COLS === 7
+              ? ["10%", "16%", "15%", "15%", "15%", "15%", "14%"]
+              : Array(MAIN_COLS).fill(`${Math.round(100 / MAIN_COLS)}%`);
       colgroup = `<colgroup>${mainWidths.map((w) => `<col style="width:${w}">`).join("")}</colgroup>`;
 
       const rowChunks = body?.split(/<\/tr>\s*/i).filter((s) => s.trim()) ?? [];
@@ -139,9 +141,13 @@ function buildRenderer(): Renderer {
         const detailCells = cells.slice(MAIN_COLS);
 
         const innerColgroup = mainWidths.map((w) => `<col style="width:${w}">`).join("");
+        const firstCellStyle =
+          isScorecard ? mainCellStyle + ";white-space:nowrap" : mainCellStyle;
         const mainRowHtml =
           `<table class="blueprint-section-main" style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:0.9375rem"><colgroup>${innerColgroup}</colgroup><tbody><tr>` +
-          mainCells.map((c) => `<td style="${mainCellStyle}">${c}</td>`).join("") +
+          mainCells
+            .map((c, i) => `<td style="${i === 0 ? firstCellStyle : mainCellStyle}">${c}</td>`)
+            .join("") +
           `</tr></tbody></table>`;
 
         const detailBlocksHtml = detailCells
