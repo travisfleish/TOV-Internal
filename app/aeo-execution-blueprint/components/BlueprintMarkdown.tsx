@@ -105,9 +105,11 @@ function buildRenderer(): Renderer {
         `white-space:nowrap">${content}</th>\n`
       );
     }
+    // Strip protocol prefix from URLs so the column stays narrow
+    const cellContent = content.replace(/https?:\/\//g, "");
     return (
       `<td style="padding:0.625rem 0.875rem;border-bottom:1px solid var(--color-lightGrey);` +
-      `border-right:1px solid var(--color-lightGrey);vertical-align:top;line-height:1.55">${content}</td>\n`
+      `border-right:1px solid var(--color-lightGrey);vertical-align:top;line-height:1.55">${cellContent}</td>\n`
     );
   };
 
@@ -163,7 +165,6 @@ export function BlueprintMarkdown({ content }: BlueprintMarkdownProps) {
     <div
       dangerouslySetInnerHTML={{ __html: html }}
       style={{
-        maxWidth: "72ch",
         fontSize: "1rem",
         lineHeight: 1.7,
         color: "var(--color-navy)",

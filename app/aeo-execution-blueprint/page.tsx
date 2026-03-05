@@ -48,6 +48,50 @@ function stripCitations(md: string): string {
     .replace(/[\uE200-\uE202]/g, "");
 }
 
+/** Match quoted strings: straight " or curly " " (U+201C, U+201D) */
+const QUOTED_STRING = /["\u201C]([^"\u201D]*?)["\u201D]/g;
+
+/**
+ * Convert "Query fan-out set" lines from semicolon-separated quoted strings
+ * into markdown bullet lists for clearer display.
+ */
+function formatQueryFanOutSets(md: string): string {
+  const linePattern =
+    /^(Primary|Secondary buyer questions|Implementation|Risk\/limitations|Comparisons):\s*(.+)$/;
+  const lines = md.split("\n");
+  const out: string[] = [];
+
+  for (const line of lines) {
+    const m = line.match(linePattern);
+    if (!m) {
+      out.push(line);
+      continue;
+    }
+    const [, label, rest] = m;
+    const trimmed = rest.trim();
+    if (label === "Primary") {
+      out.push(`**Primary:** ${trimmed}`);
+      continue;
+    }
+    const items: string[] = [];
+    let match: RegExpExecArray | null;
+    QUOTED_STRING.lastIndex = 0;
+    while ((match = QUOTED_STRING.exec(trimmed)) !== null) {
+      items.push(match[1]);
+    }
+    if (items.length === 0) {
+      out.push(line);
+      continue;
+    }
+    out.push(`**${label}:**`);
+    for (const item of items) {
+      out.push(`- "${item}"`);
+    }
+  }
+
+  return out.join("\n");
+}
+
 /** Extract H2 and H3 headings for TOC, skipping the H1 */
 function extractTOCSections(md: string): SectionConfig[] {
   const sections: SectionConfig[] = [];
@@ -77,7 +121,8 @@ export default function AeoExecutionBlueprintPage() {
   // Remove the H1 line (we render our own page title in the header)
   const withoutH1 = raw.replace(/^2?#[^#][^\n]*\n?/, "");
   const content = stripCitations(withoutH1);
-  const sections = extractTOCSections(content);
+  const formatted = formatQueryFanOutSets(content);
+  const sections = extractTOCSections(formatted);
 
   return (
     <>
@@ -142,7 +187,7 @@ export default function AeoExecutionBlueprintPage() {
 
       {/* Two-column layout */}
       <GuidebookLayout sections={sections}>
-        <BlueprintMarkdown content={content} />
+        <BlueprintMarkdown content={formatted} />
         <CtaRow label="Run your copy through the Analyzer" />
       </GuidebookLayout>
     </>
